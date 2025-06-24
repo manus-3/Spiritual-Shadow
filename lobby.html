@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spiritual Shadow</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #111, #222);
+      background-image: url('https://i.ibb.co/0mH1pGk/futuristic-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .container {
+      text-align: center;
+      padding: 30px 20px 100px;
+    }
+
+    .title {
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .subtext {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .info-box {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .info-box p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .play-btn {
+      background-color: #00bcd4;
+      color: white;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .play-btn:hover {
+      background-color: #0097a7;
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+
+    .nav-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .nav-button img {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">Spiritual Shadow</div>
+  <div class="subtext">Chase your shadow in a broken future...</div>
+
+  <div class="info-box" id="userInfo">
+    <p>Loading your data...</p>
+  </div>
+
+  <button class="play-btn" onclick="window.location.href='game.html'">Play Now</button>
+</div>
+
+<div class="nav-bar">
+  <a href="index.html" class="nav-button">
+    <img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" />
+    <span>Home</span>
+  </a>
+  <a href="referral.html" class="nav-button">
+    <img src="https://cdn-icons-png.flaticon.com/512/929/929610.png" />
+    <span>Refer</span>
+  </a>
+  <a href="withdraw.html" class="nav-button">
+    <img src="https://cdn-icons-png.flaticon.com/512/1041/1041872.png" />
+    <span>Withdraw</span>
+  </a>
+  <a href="settings.html" class="nav-button">
+    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" />
+    <span>Settings</span>
+  </a>
+  <a href="leaderboard.html" class="nav-button">
+    <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" />
+    <span>Leaderboard</span>
+  </a>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+    authDomain: "spiritual-shadow.firebaseapp.com",
+    projectId: "spiritual-shadow"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
+  const userInfo = document.getElementById("userInfo");
+
+  signInAnonymously(auth).then(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const uid = user.uid;
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+
+        if (!docSnap.exists()) {
+          const newUser = {
+            uid: uid,
+            name: tg.initDataUnsafe.user?.first_name || "Unknown",
+            tg_id: tg.initDataUnsafe.user?.id || "N/A",
+            created_at: Date.now(),
+            shadow_coin_weekly: 0,
+            shadow_coin_total: 0,
+            usd_balance: 0
+          };
+          await setDoc(userRef, newUser);
+          userInfo.innerHTML = `<p>Welcome, ${newUser.name}</p>
+            <p>Weekly Shadow Coin: 0</p>
+            <p>Total Shadow Coin: 0</p>
+            <p>Balance: $0.00</p>`;
+        } else {
+          const data = docSnap.data();
+          userInfo.innerHTML = `
+            <p>Welcome, ${data.name}</p>
+            <p>Weekly Shadow Coin: ${data.shadow_coin_weekly || 0}</p>
+            <p>Total Shadow Coin: ${data.shadow_coin_total || 0}</p>
+            <p>Balance: $${data.usd_balance?.toFixed(2) || '0.00'}</p>`;
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
