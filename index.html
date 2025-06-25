@@ -16,6 +16,8 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      height: 100vh;
+      position: relative;
     }
     .logo {
       font-size: 2em;
@@ -49,18 +51,22 @@
       cursor: pointer;
     }
     .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
       display: flex;
       justify-content: space-around;
-      width: 100%;
-      max-width: 400px;
-      margin-top: auto;
       padding: 10px 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
     }
     .bottom-nav button {
       background: transparent;
       color: #f0f0f0;
       border: none;
       font-size: 14px;
+      cursor: pointer;
     }
     .floating-btns {
       position: fixed;
@@ -76,26 +82,27 @@
       border: 1px solid #5f27cd;
       border-radius: 10px;
       padding: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="logo">🌑 Spiritual Shadow</div>  <div class="player-info" id="playerInfo">
+  <div class="logo">🪙Spiritual Shadow</div>  <div class="player-info" id="playerInfo">
     Loading player data...
   </div>  <div class="menu">
     <button onclick="startGame()">▶ Start Game</button>
-    <button>🎮 Game Modes</button>
-    <button>🧙 Customize Shadow</button>
-  </div>  <div class="bottom-nav">
-    <button>📜 Missions</button>
-    <button>⛏ Offline Mining</button>
-    <button>🛒 Shop</button>
-    <button>⚙ Settings</button>
+    <button onclick="openPage('modes.html')">🎮 Game Modes</button>
+    <button onclick="openPage('customize.html')">🧙 Customize Shadow</button>
   </div>  <div class="floating-btns">
-    <button>🏆 Leaderboard</button>
-    <button>🎁 Daily Rewards</button>
-    <button>💌 Notifications</button>
-    <button>🎉 Events</button>
+    <button onclick="openPage('leaderboard.html')">🏆 Leaderboard</button>
+    <button onclick="openPage('rewards.html')">🎁 Daily Rewards</button>
+    <button onclick="openPage('notifications.html')">💌 Notifications</button>
+    <button onclick="openPage('events.html')">🎉 Events</button>
+  </div>  <div class="bottom-nav">
+    <button onclick="openPage('missions.html')">📜 Missions</button>
+    <button onclick="openPage('mining.html')">⛏ Offline Mining</button>
+    <button onclick="openPage('shop.html')">🛒 Shop</button>
+    <button onclick="openPage('settings.html')">⚙ Settings</button>
   </div>  <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
@@ -139,7 +146,7 @@
         📲 Telegram ID: ${user.id}<br>
         📅 Joined: ${new Date().toLocaleDateString()}<br>
         💰 Available Shadow Coins: 0<br>
-        💰Total Shadow Coin Earned:
+        💰Total Shadow Coin Earned:<br>
         🤝 Total Vaild Referrals: 0<br>
         💵 USD Balance: $0.00
       `;
@@ -150,8 +157,12 @@
         show_9491087();
       }
       setTimeout(() => {
-        alert("🚀 Game Starting!");
+        window.location.href = "game.html";
       }, 4000);
+    }
+
+    function openPage(filename) {
+      window.location.href = filename;
     }
 
     tg.ready(() => {
