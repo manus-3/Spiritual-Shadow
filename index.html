@@ -82,6 +82,7 @@
     <button class="play-btn" onclick="startGame()">Play Now</button>
   </div>
 
+  <!-- Bottom Nav -->
   <div class="nav-bar">
     <a href="lobby.html" class="nav-button">
       <img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" />
@@ -106,7 +107,6 @@
   </div>
 
   <script type="module">
-    // Firebase + Telegram setup
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -116,6 +116,7 @@
       authDomain: "spiritual-shadow.firebaseapp.com",
       projectId: "spiritual-shadow"
     };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
@@ -127,14 +128,14 @@
     signInAnonymously(auth).then(() => {
       onAuthStateChanged(auth, async user => {
         if (!user) {
-          userInfoEl.innerHTML = `<p>Error: not authenticated</p>`;
+          userInfoEl.innerHTML = `<p>❌ Login failed</p>`;
           return;
         }
         const uid = user.uid;
         const ref = doc(db, "users", uid);
         let snap = await getDoc(ref);
+
         if (!snap.exists()) {
-          // প্রথমবারের ইউজার
           const profile = {
             uid,
             name: tg.initDataUnsafe.user?.first_name || "Unknown",
@@ -149,22 +150,22 @@
           await setDoc(ref, profile);
           snap = await getDoc(ref);
         }
+
         const data = snap.data();
         userInfoEl.innerHTML = `
           <p><strong>${data.name}</strong></p>
           <p>Weekly Shadow Coin: ${data.shadow_coin_weekly}</p>
-          <p>Total Shadow Coin Earned: ${data.shadow_coin_total}</p>
-         <p>Available Shadow Coin: ${data.available_shadow_coin}</p>
-         <p>Total Vaild Reffer: ${data.total_vaild_reffer}</p>
+          <p>Total Earned: ${data.shadow_coin_total}</p>
+          <p>Available: ${data.available_shadow_coin}</p>
+          <p>Valid Referrals: ${data.total_vaild_reffer}</p>
           <p>Balance: $${data.usd_balance.toFixed(2)}</p>
         `;
       });
     }).catch(e => {
-      userInfoEl.innerHTML = `<p>Error signing in: ${e.message}</p>`;
+      userInfoEl.innerHTML = `<p>❌ Auth Error: ${e.message}</p>`;
     });
 
     function startGame() {
-      // এখানে Game page এ যাওয়ার লজিক
       window.location.href = "game.html";
     }
   </script>
