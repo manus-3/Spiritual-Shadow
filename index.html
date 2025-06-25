@@ -98,7 +98,7 @@
   <div class="subtext">Chase your shadow in a broken future...</div>
 
   <div class="info-box" id="userInfo">
-    <p>Loading your data...</p>
+    <p>please wait, Loading your data...</p>
   </div>
 
   <button class="play-btn" onclick="window.location.href='game.html'">Play Now</button>
@@ -159,14 +159,19 @@
             name: tg.initDataUnsafe.user?.first_name || "Unknown",
             tg_id: tg.initDataUnsafe.user?.id || "N/A",
             created_at: Date.now(),
+            available_shadow_coin: 0,
+            vaild_reffer_total: 0,
             shadow_coin_weekly: 0,
             shadow_coin_total: 0,
+            last_shadow_caught: 0,
             usd_balance: 0
           };
           await setDoc(userRef, newUser);
           userInfo.innerHTML = `<p>Welcome, ${newUser.name}</p>
             <p>Weekly Shadow Coin: 0</p>
             <p>Total Shadow Coin: 0</p>
+            <p> Available Shadow Coin: 0</p>
+            <p>Total Vaild Reffer: 0</p>
             <p>Balance: $0.00</p>`;
         } else {
           const data = docSnap.data();
@@ -174,6 +179,8 @@
             <p>Welcome, ${data.name}</p>
             <p>Weekly Shadow Coin: ${data.shadow_coin_weekly || 0}</p>
             <p>Total Shadow Coin: ${data.shadow_coin_total || 0}</p>
+            <p>Total Vaild Refer: ${data.vaild_reffer_total ||0}</p>
+            <p>Available Shadow Coin: ${data.available_shadow_coin ||0}</p>
             <p>Balance: $${data.usd_balance?.toFixed(2) || '0.00'}</p>`;
         }
       }
