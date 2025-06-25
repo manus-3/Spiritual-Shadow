@@ -1,173 +1,161 @@
-<!DOCTYPE html>
-<html lang="bn">
+<!DOCTYPE html><html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spiritual Shadow Lobby</title>
+  <title>Spiritual Shadow - Lobby</title>
+  <meta charset="UTF-8">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src='//libtl.com/sdk.js' data-zone='9491087' data-sdk='show_9491087'></script>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: url('https://lh3.googleusercontent.com/d/1HKiwQBL4W-jkI3Kv1ghWFW3ged1WqLtd') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Arial', sans-serif;
-      color: white;
-      text-align: center;
-    }
-    .overlay {
-      background: rgba(0,0,0,0.6);
-      padding: 20px;
-      min-height: 100vh;
-    }
-    .title {
-      font-size: 36px;
-      margin: 20px 0;
-    }
-    .info-box {
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      display: inline-block;
-      padding: 15px 25px;
-      text-align: left;
-      margin-bottom: 30px;
-    }
-    .info-box p {
-      margin: 6px 0;
-      font-size: 18px;
-    }
-    .play-btn {
-      background-color: #00bcd4;
-      color: white;
-      padding: 14px 32px;
-      font-size: 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .play-btn:hover {
-      background-color: #0097a7;
-    }
-    .nav-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0; right: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-    }
-    .nav-button {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(#0a0a0a, #1a1a2e);
+      color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: white;
-      font-size: 12px;
-      text-decoration: none;
+      padding: 20px;
     }
-    .nav-button img {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 4px;
+    .logo {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #5f27cd;
+    }
+    .player-info {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 15px;
+      width: 100%;
+      max-width: 400px;
+      font-size: 14px;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 20px 0;
+      width: 100%;
+      max-width: 300px;
+    }
+    .menu button {
+      background: #5f27cd;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 400px;
+      margin-top: auto;
+      padding: 10px 0;
+    }
+    .bottom-nav button {
+      background: transparent;
+      color: #f0f0f0;
+      border: none;
+      font-size: 14px;
+    }
+    .floating-btns {
+      position: fixed;
+      right: 10px;
+      top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .floating-btns button {
+      background: #222;
+      color: white;
+      border: 1px solid #5f27cd;
+      border-radius: 10px;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="overlay">
-    <div class="title">Spiritual Shadow</div>
-    <div class="info-box" id="userInfo">
-      <p>Loading your stats…</p>
-    </div>
-    <button class="play-btn" onclick="startGame()">Play Now</button>
-  </div>
-
-  <!-- Bottom Nav -->
-  <div class="nav-bar">
-    <a href="lobby.html" class="nav-button">
-      <img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" />
-      <span>Home</span>
-    </a>
-    <a href="referral.html" class="nav-button">
-      <img src="https://cdn-icons-png.flaticon.com/512/929/929610.png" />
-      <span>Refer</span>
-    </a>
-    <a href="withdraw.html" class="nav-button">
-      <img src="https://cdn-icons-png.flaticon.com/512/1041/1041872.png" />
-      <span>Withdraw</span>
-    </a>
-    <a href="settings.html" class="nav-button">
-      <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" />
-      <span>Settings</span>
-    </a>
-    <a href="leaderboard.html" class="nav-button">
-      <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" />
-      <span>Leaderboard</span>
-    </a>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  <div class="logo">🌑 Spiritual Shadow</div>  <div class="player-info" id="playerInfo">
+    Loading player data...
+  </div>  <div class="menu">
+    <button onclick="startGame()">▶ Start Game</button>
+    <button>🎮 Game Modes</button>
+    <button>🧙 Customize Shadow</button>
+  </div>  <div class="bottom-nav">
+    <button>📜 Missions</button>
+    <button>⛏ Offline Mining</button>
+    <button>🛒 Shop</button>
+    <button>⚙ Settings</button>
+  </div>  <div class="floating-btns">
+    <button>🏆 Leaderboard</button>
+    <button>🎁 Daily Rewards</button>
+    <button>💌 Notifications</button>
+    <button>🎉 Events</button>
+  </div>  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
     const firebaseConfig = {
       apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
       authDomain: "spiritual-shadow.firebaseapp.com",
-      projectId: "spiritual-shadow"
+      projectId: "spiritual-shadow",
+      storageBucket: "spiritual-shadow.appspot.com",
+      messagingSenderId: "905075250044",
+      appId: "1:905075250044:web:your-app-id"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    const userInfoEl = document.getElementById("userInfo");
+    async function saveNewUser() {
+      const user = tg.initDataUnsafe.user;
+      const uid = "tg_" + user.id;
+      const ref = db.collection("users").doc(uid);
+      const docSnap = await ref.get();
 
-    signInAnonymously(auth).then(() => {
-      onAuthStateChanged(auth, async user => {
-        if (!user) {
-          userInfoEl.innerHTML = `<p>❌ Login failed</p>`;
-          return;
-        }
-        const uid = user.uid;
-        const ref = doc(db, "users", uid);
-        let snap = await getDoc(ref);
+      if (!docSnap.exists) {
+        await ref.set({
+          uid,
+          name: tg.initDataUnsafe.user?.first_name || "Unknown",
+          tg_id: tg.initDataUnsafe.user?.id || "N/A",
+          created_at: Date.now(),
+          shadow_coin_weekly: 0,
+          shadow_coin_total: 0,
+          available_shadow_coin: 0,
+          total_valid_refer: 0,
+          usd_balance: 0.00
+        });
+      }
 
-        if (!snap.exists()) {
-          const profile = {
-            uid,
-            name: tg.initDataUnsafe.user?.first_name || "Unknown",
-            tg_id: tg.initDataUnsafe.user?.id || "N/A",
-            created_at: Date.now(),
-            shadow_coin_weekly: 0,
-            shadow_coin_total: 0,
-            available_shadow_coin: 0,
-            total_vaild_reffer: 0,
-            usd_balance: 0
-          };
-          await setDoc(ref, profile);
-          snap = await getDoc(ref);
-        }
-
-        const data = snap.data();
-        userInfoEl.innerHTML = `
-          <p><strong>${data.name}</strong></p>
-          <p>Weekly Shadow Coin: ${data.shadow_coin_weekly}</p>
-          <p>Total Earned: ${data.shadow_coin_total}</p>
-          <p>Available: ${data.available_shadow_coin}</p>
-          <p>Valid Referrals: ${data.total_vaild_reffer}</p>
-          <p>Balance: $${data.usd_balance.toFixed(2)}</p>
-        `;
-      });
-    }).catch(e => {
-      userInfoEl.innerHTML = `<p>❌ Auth Error: ${e.message}</p>`;
-    });
-
-    function startGame() {
-      window.location.href = "game.html";
+      // Display on UI
+      document.getElementById("playerInfo").innerHTML = `
+        👤 Name: ${user.first_name || "Unknown"}<br>
+        🆔 UID: ${uid}<br>
+        📲 Telegram ID: ${user.id}<br>
+        📅 Joined: ${new Date().toLocaleDateString()}<br>
+        💰 Available Shadow Coins: 0<br>
+        💰Total Shadow Coin Earned:
+        🤝 Total Vaild Referrals: 0<br>
+        💵 USD Balance: $0.00
+      `;
     }
-  </script>
-</body>
+
+    async function startGame() {
+      if (typeof show_9491087 === "function") {
+        show_9491087();
+      }
+      setTimeout(() => {
+        alert("🚀 Game Starting!");
+      }, 4000);
+    }
+
+    tg.ready(() => {
+      saveNewUser().catch(console.error);
+    });
+  </script></body>
 </html>
