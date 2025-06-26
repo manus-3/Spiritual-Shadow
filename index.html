@@ -2,7 +2,36 @@
 <head>
   <title>Spiritual Shadow - Lobby</title>
   <meta charset="UTF-8">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>  <!-- Ad Script -->  <script src="https://whephiwums.com/sdk.js" data-zone="9217711" data-sdk="show_9217711"></script>  <!-- Firebase Setup -->  <script type="module">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>  <!-- Ad Script -->  <script>
+    window.show_9217711 = () => {
+      return new Promise((resolve) => {
+        const adBox = document.createElement("div");
+        adBox.style.position = "fixed";
+        adBox.style.top = 0;
+        adBox.style.left = 0;
+        adBox.style.width = "100vw";
+        adBox.style.height = "100vh";
+        adBox.style.background = "rgba(0,0,0,0.95)";
+        adBox.style.display = "flex";
+        adBox.style.alignItems = "center";
+        adBox.style.justifyContent = "center";
+        adBox.style.zIndex = 9999;
+        adBox.style.color = "white";
+        adBox.innerHTML = `
+          <div style="text-align:center">
+            <h2>🎬 Ad is Playing...</h2>
+            <p>Please wait...</p>
+          </div>
+        `;
+        document.body.appendChild(adBox);
+
+        setTimeout(() => {
+          document.body.removeChild(adBox);
+          resolve();
+        }, 4000); // Fake 4 sec ad
+      });
+    };
+  </script>  <!-- Firebase Setup -->  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -61,22 +90,15 @@
     window.openPage = function (filename) {
       window.location.href = filename;
     };
-  </script>  <!-- Ad logic -->  <script>
+  </script>  <!-- Ad Play Logic -->  <script>
     window.showAdThenPlay = function () {
-      let adShown = true;
-      try {
-        if (typeof show_9217711 === 'function') {
-          show_9217711().then(() => {
-            adShown = true;
-            window.location.href = 'game.html';
-          }).catch(() => {
-            window.location.href = 'game.html';
-          });
-        } else {
-          setTimeout(() => window.location.href = 'game.html', 5000);
-        }
-      } catch (e) {
-        console.log("Ad error:", e);
+      if (typeof show_9217711 === 'function') {
+        show_9217711().then(() => {
+          window.location.href = 'game.html';
+        }).catch(() => {
+          window.location.href = 'game.html';
+        });
+      } else {
         setTimeout(() => window.location.href = 'game.html', 5000);
       }
     };
