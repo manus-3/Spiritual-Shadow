@@ -130,15 +130,17 @@
     });
 
     async function saveNewUser() {
-      const tgUser = tg.initDataUnsafe.user;
+      const tgUser = tg?.initDataUnsafe?.user || { id: "guest_" + Date.now(), first_name: "Guest" };
       const uid = "tg_" + tgUser.id;
       const ref = db.collection("users").doc(uid);
-      const doc = await ref.get();
 
+      console.log("Trying to save user:", uid);
+
+      const doc = await ref.get();
       if (!doc.exists) {
         await ref.set({
           uid,
-          name: tgUser.first_name || "Unknown",
+          name: tgUser.first_name,
           tg_id: tgUser.id,
           created_at: Date.now(),
           shadow_coin_weekly: 0,
@@ -147,9 +149,13 @@
           total_valid_refer: 0,
           usd_balance: 0.00
         });
+        console.log("New user saved to Firestore ✅");
       }
 
+      await new Promise(res => setTimeout(res, 500));
       const userData = (await ref.get()).data();
+      console.log("Fetched data:", userData);
+
       document.getElementById("playerInfo").innerHTML = `
         👤 Name: ${userData.name}<br>
         🆔 UID: ${userData.uid}<br>
