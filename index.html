@@ -152,17 +152,27 @@
       `;
     }
 
-    async function startGame() {
-      if (typeof show_9491087 === "function") {
-        show_9491087();
+    window.showAdThenPlay = function () {
+      let adShown = false;
+      try {
+        if (typeof show_9217711 === 'function') {
+          show_9217711().then(() => {
+            adShown = true;
+            window.location.href = 'game.html';
+          }).catch(() => {
+            window.location.href = 'game.html';
+          });
+        } else {
+          setTimeout(() => window.location.href = 'game.html', 5000);
+        }
+      } catch (e) {
+        console.log("Ad error:", e);
+        setTimeout(() => window.location.href = 'game.html', 5000);
       }
-      setTimeout(() => {
-        window.location.href = "game.html";
-      }, 4000);
-    }
+    };
 
-    function openPage(filename) {
-      window.location.href = filename;
+    function openPage(game.html) {
+      window.location.href = game.html0;
     }
 
     tg.ready(() => {
