@@ -9,14 +9,14 @@
   <script>
     window.adSDKLoaded = false;
     const sdkScript = document.createElement('script');
-    sdkScript.src = 'https://whephiwums.com/sdk.js';
-    sdkScript.setAttribute('data-zone', '9217711');
-    sdkScript.setAttribute('data-sdk', 'show_9217711');
+    sdkScript.src = 'https://libtl.com/sdk.js';
+    sdkScript.setAttribute('data-zone', '9494630');
+    sdkScript.setAttribute('data-sdk', 'show_9494630');
     sdkScript.onload = () => { window.adSDKLoaded = true;console.log('Ad SDK loaded'); };
     document.head.appendChild(sdkScript);window.showAdThenPlay = function () {
-  if (window.adSDKLoaded && typeof show_9217711 === 'function') {
+  if (window.adSDKLoaded && typeof show_9494630 === 'function') {
     console.log('Calling ad function');
-    show_9217711()
+    show_9494630()
       .then(() => { window.location.href = 'game.html'; })
       .catch(() => { window.location.href = 'game.html'; });
   } else {
