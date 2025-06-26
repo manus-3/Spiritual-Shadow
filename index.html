@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src='//libtl.com/sdk.js' data-zone='9491087' data-sdk='show_9491087'></script>
+  <script src="//libtl.com/sdk.js" data-zone="9491087" data-sdk="show_9491087"></script>
   <style>
     body {
       margin: 0;
@@ -70,8 +71,8 @@
     }
     .floating-btns {
       position: fixed;
-      right: 10px;
-      top: 10px;
+      bottom: 60px;
+      left: 10px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -118,6 +119,17 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    function signInAnonAndLoad() {
+      auth.signInAnonymously()
+        .then(() => {
+          saveNewUser();
+        })
+        .catch(error => {
+          console.error("Auth failed:", error);
+        });
+    }
 
     async function saveNewUser() {
       const user = tg.initDataUnsafe.user;
@@ -128,8 +140,8 @@
       if (!docSnap.exists) {
         await ref.set({
           uid,
-          name: tg.initDataUnsafe.user?.first_name || "Unknown",
-          tg_id: tg.initDataUnsafe.user?.id || "N/A",
+          name: user?.first_name || "Unknown",
+          tg_id: user?.id || "N/A",
           created_at: Date.now(),
           shadow_coin_weekly: 0,
           shadow_coin_total: 0,
@@ -139,26 +151,28 @@
         });
       }
 
-      // Display on UI
+      const userData = (await ref.get()).data();
       document.getElementById("playerInfo").innerHTML = `
-        👤 Name: ${user.first_name || "Unknown"}<br>
+        👤 Name: ${userData.name}<br>
         🆔 UID: ${uid}<br>
-        📲 Telegram ID: ${user.id}<br>
-        📅 Joined: ${new Date().toLocaleDateString()}<br>
-        💰 Available Shadow Coins: 0<br>
-        💰Total Shadow Coin Earned:<br>
-        🤝 Total Vaild Referrals: 0<br>
-        💵 USD Balance: $0.00
+        📲 Telegram ID: ${userData.tg_id}<br>
+        📅 Joined: ${new Date(userData.created_at).toLocaleDateString()}<br>
+        🪙 Shadow Coins: ${userData.shadow_coin_total}<br>
+        🤝 Referrals: ${userData.total_valid_refer}<br>
+        💵 USD Balance: $${userData.usd_balance.toFixed(2)}
       `;
     }
 
     async function startGame() {
       if (typeof show_9491087 === "function") {
         show_9491087();
-      }
-      setTimeout(() => {
+        setTimeout(() => {
+          window.location.href = "game.html";
+        }, 4000);
+      } else {
+        console.warn("Ad script not loaded.");
         window.location.href = "game.html";
-      }, 4000);
+      }
     }
 
     function openPage(filename) {
@@ -166,7 +180,7 @@
     }
 
     tg.ready(() => {
-      saveNewUser().catch(console.error);
+      signInAnonAndLoad();
     });
   </script></body>
 </html>
