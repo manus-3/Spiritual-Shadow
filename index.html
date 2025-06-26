@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Spiritual Shadow - Lobby</title>
-
-  <!-- Firebase + Telegram -->
+  <meta charset="UTF-8">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js" type="module"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js" type="module"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Monetag SDK -->
-  <script src='//libtl.com/sdk.js' data-zone='9494630' data-sdk='show_9494630'></script>
-
+  <script src="https://whephiwums.com/sdk.js" data-zone="9217711" data-sdk="show_9217711"></script>
   <style>
     body {
       margin: 0;
@@ -72,8 +65,8 @@
     }
     .floating-btns {
       position: fixed;
-      bottom: 10px;
       right: 10px;
+      top: 10px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -88,31 +81,23 @@
   </style>
 </head>
 <body>
-  <div class="logo">Spiritual Shadow</div>
-
-  <div class="player-info" id="userInfo">Loading player data...</div>
-
-  <div class="menu">
+  <div class="logo"> Spiritual Shadow</div>  <div class="player-info" id="playerInfo">
+    Loading player data...
+  </div>  <div class="menu">
     <button onclick="showAdThenPlay()">▶ Start Game</button>
-    <button onclick="alert('Coming soon')">🎮 Game Modes</button>
-    <button onclick="alert('Coming soon')">🧙 Customize Shadow</button>
-  </div>
-
-  <div class="bottom-nav">
-    <button onclick="alert('Missions coming')">📜 Missions</button>
-    <button onclick="alert('Offline mining soon')">⛏ Offline Mining</button>
-    <button onclick="alert('Shop coming')">🛒 Shop</button>
-    <button onclick="alert('Settings coming')">⚙ Settings</button>
-  </div>
-
-  <div class="floating-btns">
-    <button onclick="alert('Leaderboard')">🏆 Leaderboard</button>
-    <button onclick="alert('Daily Rewards')">🎁 Daily Rewards</button>
-    <button onclick="alert('Notifications')">💌 Notifications</button>
-    <button onclick="alert('Events')">🎉 Events</button>
-  </div>
-
-  <script type="module">
+    <button>🎮 Game Modes</button>
+    <button>🧙 Customize Shadow</button>
+  </div>  <div class="bottom-nav">
+    <button>📜 Missions</button>
+    <button>⛏ Offline Mining</button>
+    <button>🛒 Shop</button>
+    <button>⚙ Settings</button>
+  </div>  <div class="floating-btns">
+    <button>🏆 Leaderboard</button>
+    <button>🎁 Daily Rewards</button>
+    <button>💌 Notifications</button>
+    <button>🎉 Events</button>
+  </div>  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -127,61 +112,58 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     const tg = window.Telegram.WebApp;
-
     tg.ready();
 
-    const userInfoEl = document.getElementById("userInfo");
-
     signInAnonymously(auth).then(() => {
-      onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-          userInfoEl.innerHTML = `<p>Error: not authenticated</p>`;
-          return;
-        }
-
-        const uid = "tg_" + (tg.initDataUnsafe.user?.id || user.uid);
-        const ref = doc(db, "users", uid);
-        let snap = await getDoc(ref);
-
+      onAuthStateChanged(auth, async user => {
+        if (!user) return;
+        const uid = user.uid;
+        const userRef = doc(db, "users", uid);
+        let snap = await getDoc(userRef);
         if (!snap.exists()) {
-          const profile = {
+          const newUser = {
             uid,
             name: tg.initDataUnsafe.user?.first_name || "Unknown",
             tg_id: tg.initDataUnsafe.user?.id || "N/A",
             created_at: Date.now(),
             shadow_coin_weekly: 0,
             shadow_coin_total: 0,
-            usd_balance: 0
+            available_shadow_coin: 0,
+            total_valid_refer: 0,
+            usd_balance: 0.00
           };
-          await setDoc(ref, profile);
-          snap = await getDoc(ref);
+          await setDoc(userRef, newUser);
+          snap = await getDoc(userRef);
         }
-
         const data = snap.data();
-        userInfoEl.innerHTML = `
+        document.getElementById("playerInfo").innerHTML = `
           👤 Name: ${data.name}<br>
           🆔 UID: ${data.uid}<br>
-          💰 Shadow Weekly: ${data.shadow_coin_weekly}<br>
-          💰 Total Shadow Coin: ${data.shadow_coin_total}<br>
+          📲 Telegram ID: ${data.tg_id}<br>
+          📅 Joined: ${new Date(data.created_at).toLocaleDateString()}<br>
+          💰 Shadow Coins: ${data.available_shadow_coin}<br>
+          🪙 Total Coins: ${data.shadow_coin_total}<br>
+          🤝 Valid Referrals: ${data.total_valid_refer}<br>
           💵 USD Balance: $${data.usd_balance.toFixed(2)}
         `;
       });
-    }).catch(e => {
-      userInfoEl.innerHTML = `<p>Auth error: ${e.message}</p>`;
     });
 
-    // ✅ Monetag Ad Function
     window.showAdThenPlay = function () {
-      if (typeof show_9494630 === "function") {
-        show_9494360().then(() => {
-          window.location.href = "game.html";
-        }).catch(() => {
-          window.location.href = "game.html";
-        });
-      } else {
-        setTimeout(() => window.location.href = "game.html", 4000);
+      try {
+        if (typeof show_9217711 === 'function') {
+          show_9217711().then(() => {
+            window.location.href = 'game.html';
+          }).catch(() => {
+            window.location.href = 'game.html';
+          });
+        } else {
+          setTimeout(() => window.location.href = 'game.html', 5000);
+        }
+      } catch (e) {
+        console.log("Ad error:", e);
+        setTimeout(() => window.location.href = 'game.html', 5000);
       }
-    };
-  </script>
-</body>
+    }
+  </script></body>
 </html>
