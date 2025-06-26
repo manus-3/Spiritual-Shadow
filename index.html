@@ -2,25 +2,19 @@
 <head>
   <title>Spiritual Shadow - Lobby</title>
   <meta charset="UTF-8">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>  <!-- Ad Script -->  <script src="https://libtl.com/sdk.js" data-zone="9491087" data-sdk="show_9491087"></script>  <script>
-    window.showAdThenPlay = function () {
-      let adShown = false;
-      try {
-        if (typeof show_9491087 === 'function') {
-          show_9491087().then(() => {
-            adShown = true;
-            window.location.href = 'game.html';
-          }).catch(() => {
-            window.location.href = 'game.html';
-          });
-        } else {
-          setTimeout(() => window.location.href = 'game.html', 5000);
-        }
-      } catch (e) {
-        console.log("Ad error:", e);
-        setTimeout(() => window.location.href = 'game.html', 5000);
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>  <!-- LibTL Ad Script (From working code) -->  <script src='https://jagnaimsee.net/vignette.min.js' data-zone='8635060' data-sdk='show_8635060'></script>  <script>
+    function showAdThenPlay() {
+      if (typeof show_8635060 === 'function') {
+        show_8635060().then(() => {
+          window.location.href = 'game.html';
+        }).catch(() => {
+          window.location.href = 'game.html';
+        });
+      } else {
+        console.warn('Ad function not available. Skipping to game.');
+        setTimeout(() => window.location.href = 'game.html', 3000);
       }
-    };
+    }
   </script>  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
