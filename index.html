@@ -87,7 +87,7 @@
   </style>
 </head>
 <body>
-  <div class="logo">🪙Spiritual Shadow</div>  <div class="player-info" id="playerInfo">
+  <div class="logo">Spiritual Shadow</div>  <div class="player-info" id="playerInfo">
     Loading player data...
   </div>  <div class="menu">
     <button onclick="startGame()">▶ Start Game</button>
@@ -152,27 +152,17 @@
       `;
     }
 
-    window.showAdThenPlay = function () {
-      let adShown = false;
-      try {
-        if (typeof show_9491087 === 'function') {
-          show_9491087().then(() => {
-            adShown = true;
-            window.location.href = 'game.html';
-          }).catch(() => {
-            window.location.href = 'game.html';
-          });
-        } else {
-          setTimeout(() => window.location.href = 'game.html', 5000);
-        }
-      } catch (e) {
-        console.log("Ad error:", e);
-        setTimeout(() => window.location.href = 'game.html', 5000);
+    async function startGame() {
+      if (typeof show_9491087 === "function") {
+        show_9491087();
       }
-    };
+      setTimeout(() => {
+        window.location.href = "game.html";
+      }, 4000);
+    }
 
-    function openPage(game.html) {
-      window.location.href = game.html0;
+    function openPage(filename) {
+      window.location.href = filename;
     }
 
     tg.ready(() => {
