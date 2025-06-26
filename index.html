@@ -121,27 +121,25 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    function signInAnonAndLoad() {
-      auth.signInAnonymously()
-        .then(() => {
-          saveNewUser();
-        })
-        .catch(error => {
-          console.error("Auth failed:", error);
-        });
-    }
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        await saveNewUser();
+      } else {
+        await auth.signInAnonymously();
+      }
+    });
 
     async function saveNewUser() {
-      const user = tg.initDataUnsafe.user;
-      const uid = "tg_" + user.id;
+      const tgUser = tg.initDataUnsafe.user;
+      const uid = "tg_" + tgUser.id;
       const ref = db.collection("users").doc(uid);
-      const docSnap = await ref.get();
+      const doc = await ref.get();
 
-      if (!docSnap.exists) {
+      if (!doc.exists) {
         await ref.set({
           uid,
-          name: user?.first_name || "Unknown",
-          tg_id: user?.id || "N/A",
+          name: tgUser.first_name || "Unknown",
+          tg_id: tgUser.id,
           created_at: Date.now(),
           shadow_coin_weekly: 0,
           shadow_coin_total: 0,
@@ -154,7 +152,7 @@
       const userData = (await ref.get()).data();
       document.getElementById("playerInfo").innerHTML = `
         👤 Name: ${userData.name}<br>
-        🆔 UID: ${uid}<br>
+        🆔 UID: ${userData.uid}<br>
         📲 Telegram ID: ${userData.tg_id}<br>
         📅 Joined: ${new Date(userData.created_at).toLocaleDateString()}<br>
         🪙 Shadow Coins: ${userData.shadow_coin_total}<br>
@@ -178,9 +176,5 @@
     function openPage(filename) {
       window.location.href = filename;
     }
-
-    tg.ready(() => {
-      signInAnonAndLoad();
-    });
   </script></body>
 </html>
