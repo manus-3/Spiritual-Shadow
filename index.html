@@ -21,6 +21,35 @@
         setTimeout(() => window.location.href = 'game.html', 3000);
       }
     }
+
+    // Button actions (can be replaced later)
+    function customizeShadow() {
+      alert("Customize Shadow clicked (Coming Soon)");
+    }
+    function withdraw() {
+      alert("Withdraw feature coming soon");
+    }
+    function leaderboard() {
+      alert("Leaderboard loading...");
+    }
+    function dailyRewards() {
+      alert("Claim your daily rewards!");
+    }
+    function notifications() {
+      alert("No new messages.");
+    }
+    function missions() {
+      alert("Mission log opening...");
+    }
+    function offlineMining() {
+      alert("Offline Mining: 123 Soul Stones collected.");
+    }
+    function shop() {
+      alert("Entering the Shadow Shop...");
+    }
+    function settings() {
+      alert("Settings panel coming soon.");
+    }
   </script>
 
   <script type="module">
@@ -77,19 +106,25 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(#0a0a0a, #1a1a2e);
+      background: linear-gradient(to bottom right, #0d0d0d, #1a1a2e);
+      background-image: url('https://i.ibb.co/GHb1Hg9/dark-forest-bg.jpg'); /* Optional background */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
       color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      min-height: 100vh;
     }
 
     .logo {
-      font-size: 2em;
+      font-size: 2.5em;
       font-weight: bold;
       margin: 20px 0;
-      color: #5f27cd;
+      color: #a259ff;
+      text-shadow: 0 0 15px #5f27cd;
     }
 
     #playerInfo {
@@ -100,12 +135,13 @@
       max-width: 400px;
       font-size: 14px;
       margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
     }
 
     .menu {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 15px;
       margin: 20px 0;
       width: 100%;
       max-width: 300px;
@@ -119,6 +155,13 @@
       color: white;
       font-size: 16px;
       cursor: pointer;
+      box-shadow: 0 0 10px #5f27cd80;
+      transition: 0.2s ease;
+    }
+
+    .menu button:hover {
+      background: #7b35e0;
+      transform: scale(1.03);
     }
 
     .bottom-nav {
@@ -128,6 +171,8 @@
       max-width: 400px;
       margin-top: auto;
       padding: 10px 0;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
     }
 
     .bottom-nav button {
@@ -135,6 +180,7 @@
       color: #f0f0f0;
       border: none;
       font-size: 14px;
+      cursor: pointer;
     }
 
     .floating-btns {
@@ -147,11 +193,13 @@
     }
 
     .floating-btns button {
-      background: #222;
+      background: #1e1e2f;
       color: white;
       border: 1px solid #5f27cd;
       border-radius: 10px;
       padding: 10px;
+      box-shadow: 0 0 8px #5f27cd50;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -162,21 +210,21 @@
 
   <div class="menu">
     <button onclick="showAdThenPlay()">▶ Play Now</button>
-    <button>🧙 Customize Shadow</button>
-    <button>💸 Withdraw</button> <!-- ✅ Replaced Game Modes -->
+    <button onclick="customizeShadow()">🧙 Customize Shadow</button>
+    <button onclick="withdraw()">💸 Withdraw</button>
   </div>
 
   <div class="floating-btns">
-    <button>🏆 Leaderboard</button> <!-- ✅ Replaced Spin Wheel -->
-    <button>🎁 Daily Rewards</button>
-    <button>💌 Notifications</button>
+    <button onclick="leaderboard()">🏆 Leaderboard</button>
+    <button onclick="dailyRewards()">🎁 Daily Rewards</button>
+    <button onclick="notifications()">💌 Notifications</button>
   </div>
 
   <div class="bottom-nav">
-    <button>📜 Missions</button>
-    <button>⛏ Offline Mining</button> <!-- ✅ Replaced Inventory -->
-    <button>🛒 Shop</button>
-    <button>⚙ Settings</button>
+    <button onclick="missions()">📜 Missions</button>
+    <button onclick="offlineMining()">⛏ Offline Mining</button>
+    <button onclick="shop()">🛒 Shop</button>
+    <button onclick="settings()">⚙ Settings</button>
   </div>
 </body>
 </html>
