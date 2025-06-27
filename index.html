@@ -223,7 +223,29 @@
     <button>⛏ Offline Mining</button>    
     <button>🛒 Shop</button>    
     <button>⚙ Settings</button>    
-  </div>    
+  </div>    <!-- 🧠 Add inside <body> just before </body> -->
+<script>
+  // Optional: Play music only after user clicks
+  const bgMusic = new Audio("https://media.vocaroo.com/mp3/1mZoJhLE71L9");
+  bgMusic.loop = true;
+
+  document.body.addEventListener("click", () => {
+    if (bgMusic.paused) {
+      bgMusic.play().catch((err) => console.log("Music blocked:", err));
+    }
+  });
+
+  // Bottom nav button actions
+  document.querySelector(".bottom-nav button:nth-child(1)").onclick = () => location.href = "missions.html";
+  document.querySelector(".bottom-nav button:nth-child(2)").onclick = () => location.href = "mining.html";
+  document.querySelector(".bottom-nav button:nth-child(3)").onclick = () => location.href = "shop.html";
+  document.querySelector(".bottom-nav button:nth-child(4)").onclick = () => location.href = "settings.html";
+
+  // Floating buttons (optional link setup)
+  document.querySelector(".floating-btns button:nth-child(1)").onclick = () => location.href = "leaderboard.html";
+  document.querySelector(".floating-btns button:nth-child(2)").onclick = () => location.href = "rewards.html";
+  document.querySelector(".floating-btns button:nth-child(3)").onclick = () => location.href = "notifications.html";
+</script>
 
 </body>    
 </html>
