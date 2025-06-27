@@ -2,294 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device=width, initial-scale=1.0"/>
   <title>Spiritual Shadow - Lobby</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    const adScript = document.createElement('script');
-    adScript.src = 'https://whephiwums.com/sdk.js';
-    adScript.setAttribute('data-zone', '9217711');
-    adScript.setAttribute('data-sdk', 'show_9217711');
-    document.head.appendChild(adScript);
-
-    window.showAdThenPlay = function () {
-      if (typeof show_9217711 === 'function') {
-        show_9217711()
-          .then(() => { window.location.href = 'game.html'; })
-          .catch(() => { window.location.href = 'game.html'; });
-      } else {
-        setTimeout(() => window.location.href = 'game.html', 3000);
-      }
-    }
-
-    // Functional placeholder actions
-    function customizeShadow() { alert("Customize Shadow coming soon."); }
-    function withdraw() { alert("Withdraw feature coming soon."); }
-    function leaderboard() { alert("Loading leaderboard..."); }
-    function dailyRewards() { alert("You claimed your daily reward!"); }
-    function notifications() { alert("No new messages."); }
-    function missions() { alert("Mission panel opening..."); }
-    function offlineMining() { alert("Offline Mining collected: 152 shadow stones."); }
-    function shop() { alert("Entering Shadow Shop..."); }
-    function settings() { alert("Settings opening..."); }
-  </script>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-      authDomain: "spiritual-shadow.firebaseapp.com",
-      projectId: "spiritual-shadow"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-
-    const infoBox = document.getElementById("playerInfo");
-
-    signInAnonymously(auth).then(() => {
-      onAuthStateChanged(auth, async user => {
-        if (!user) return;
-        const uid = user.uid;
-        const ref = doc(db, "users", uid);
-        let snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, {
-            uid,
-            name: tg.initDataUnsafe.user?.first_name || "Unknown",
-            tg_id: tg.initDataUnsafe.user?.id || "N/A",
-            created_at: Date.now(),
-            shadow_coin_weekly: 0,
-            shadow_coin_total: 0,
-            available_shadow_coin: 0,
-            total_valid_refer: 0,
-            usd_balance: 0
-          });
-          snap = await getDoc(ref);
-        }
-        const data = snap.data();
-        infoBox.innerHTML = `
-          👤 ${data.name}<br>
-          🆔 ${data.uid}<br>
-          💰 ${data.available_shadow_coin} Shadow Coins<br>
-          💵 Balance: $${data.usd_balance.toFixed(2)}
-        `;
-      });
-    });
+    // Ad script & functions...
+    window.showAdThenPlay = () => {/*...*/};
+    function customizeShadow(){alert("Customize Shadow");}
+    function withdraw(){alert("Withdraw");}
+    function leaderboard(){alert("Leaderboard");}
+    function dailyRewards(){alert("Daily Rewards");}
+    function notifications(){alert("Notifications");}
+    function missions(){alert("Missions");}
+    function offlineMining(){alert("Offline Mining");}
+    function shop(){alert("Shop");}
+    function settings(){alert("Settings");}
   </script>
 
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #0a0a0a, #1a1a2e);
-      color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
-      position: relative;
-      overflow: hidden;
+      padding:0;
+      font-family:'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color:#f0f0f0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+      overflow:hidden;
+      position:relative;
     }
-
-    .logo {
-      font-size: 2.5em;
-      font-weight: bold;
-      margin: 20px 0;
-      color: #a259ff;
-      text-shadow: 0 0 15px #5f27cd;
-      z-index: 2;
-    }
-
-    #playerInfo {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 15px;
-      width: 100%;
-      max-width: 400px;
-      font-size: 14px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
-      z-index: 2;
-    }
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin: 20px 0;
-      width: 100%;
-      max-width: 300px;
-      z-index: 2;
-    }
-
-    .menu button {
-      background: #5f27cd;
-      border: none;
-      padding: 15px;
-      border-radius: 10px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 0 10px #5f27cd80;
-      transition: 0.2s ease;
-    }
-
-    .menu button:hover {
-      background: #7b35e0;
-      transform: scale(1.03);
-    }
-
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      width: 100%;
-      max-width: 400px;
-      margin-top: auto;
-      padding: 10px 0;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 10px;
-      z-index: 2;
-    }
-
-    .bottom-nav button {
-      background: transparent;
-      color: #f0f0f0;
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .floating-btns {
-      position: fixed;
-      right: 10px;
-      bottom: 70px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 2;
-    }
-
-    .floating-btns button {
-      background: #1e1e2f;
-      color: white;
-      border: 1px solid #5f27cd;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 0 8px #5f27cd50;
-      cursor: pointer;
-    }
-
-    /* FOG PARALLAX ANIMATION */
+    /* Fog style */
     #parallax-fog {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .fog-layer {
       position: absolute;
-      width: 200%;
-      height: 100%;
-      background-repeat: repeat;
-      background-size: cover;
-      opacity: 0.18;
-      filter: blur(4px) brightness(1.2);
-      mix-blend-mode: screen;
+      z-index: 0;
+      top:0;left:0;
+      width:100%;height:100%;
+      pointer-events:none;
     }
+    .fog-layer { position:absolute; width:200%; height:100%; background-repeat: repeat; background-size:cover;
+      opacity:0.18; filter: blur(4px) brightness(1.2); mix-blend-mode: screen;
+    }
+    .layer1 { background-image:url('https://i.ibb.co/6Y7kKfv/fog1.png');
+      animation: move1 60s linear infinite, pulse 8s ease-in-out infinite;
+    }
+    .layer2 { background-image:url('https://i.ibb.co/7R4j6bQ/fog2.png');
+      animation: move2 90s linear infinite, pulse 10s ease-in-out infinite;
+    }
+    .layer3 { background-image:url('https://i.ibb.co/7R4j6bQ/fog2.png'); opacity:0.08;
+      animation: move3 120s linear infinite, pulse 14s ease-in-out infinite;
+    }
+    @keyframes move1{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+    @keyframes move2{0%{transform:translateX(0);}100%{transform:translateX(-30%);}}
+    @keyframes move3{0%{transform:translateX(0);}100%{transform:translateX(-80%);}}
+    @keyframes pulse{0%,100%{opacity:0.18;filter:blur(4px)brightness(1.2);}50%{opacity:0.28;filter:blur(6px)brightness(1.4);}}
 
-    .fog-layer.layer1 {
-      background-image: url('https://i.ibb.co/wrWxpyP/fog-layer1.png');
-      animation: fogMove1 60s linear infinite, fogPulse 8s ease-in-out infinite;
-    }
+    /* UI styling */
+    .logo { z-index:2; margin-top:20px; font-size:2.5em; color:#a259ff; text-shadow:0 0 15px #5f27cd;}
+    #playerInfo { z-index:2; margin:20px; padding:15px; background:rgba(255,255,255,0.05); box-shadow:0 0 10px rgba(95,39,205,0.4); border-radius:12px; }
+    .menu { z-index:2; display:flex; flex-direction:column; gap:15px; width:90%; max-width:300px; }
+    .menu button { background:#5f27cd; padding:15px; border:none; border-radius:10px; color:white; font-size:16px; cursor:pointer; box-shadow:0 0 10px #5f27cd80; transition:0.2s; }
+    .menu button:hover{background:#7b35e0; transform:scale(1.03);}
+    .floating-btns { z-index:2; position:fixed; right:10px; bottom:150px; display:flex; flex-direction:column; gap:10px; }
+    .floating-btns button{background:#1e1e2f;color:white;border:1px solid #5f27cd;padding:10px;border-radius:10px;box-shadow:0 0 8px #5f27cd50;cursor:pointer;}
+    .bottom-nav { z-index:2; display:flex; justify-content:space-around; width:100%; max-width:400px; padding:20px 0; margin-top:auto; background:rgba(0,0,0,0.4); border-radius:10px; }
+    .bottom-nav button { background:transparent; border:none; color:#f0f0f0; font-size:14px; cursor:pointer;}
 
-    .fog-layer.layer2 {
-      background-image: url('https://i.ibb.co/vz5BtPt/fog-layer2.png');
-      animation: fogMove2 90s linear infinite, fogPulse 10s ease-in-out infinite;
-    }
-
-    .fog-layer.layer3 {
-      background-image: url('https://i.ibb.co/vz5BtPt/fog-layer2.png');
-      opacity: 0.08;
-      animation: fogMove3 120s linear infinite, fogPulse 14s ease-in-out infinite;
-    }
-
-    @keyframes fogMove1 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    @keyframes fogMove2 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-30%); }
-    }
-
-    @keyframes fogMove3 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-80%); }
-    }
-
-    @keyframes fogPulse {
-      0%, 100% { opacity: 0.18; filter: blur(4px) brightness(1.2); }
-      50% { opacity: 0.28; filter: blur(6px) brightness(1.4); }
-    }
+    /* Debug: show invisible fog if missing images */
+    .fog-layer:not([style]) { border:1px solid red!important; }
   </style>
 </head>
-
 <body>
-  <!-- 🔊 Background Music -->
-  <audio id="bgMusic" autoplay loop>
-    <source src="https://docs.google.com/uc?export=download&id=1ICB1Ja7LGHPXhbnTl4triCvNXf9ItgxX" type="audio/mpeg">
-  </audio>
-
-  <!-- 🌫️ Parallax Fog -->
+  <!-- Music & Fog -->
+  <audio id="bgMusic" controls autoplay loop src="https://docs.google.com/uc?export=download&id=1ICB1Ja7LGHPXhbnTl4triCvNXf9ItgxX"></audio>
   <div id="parallax-fog">
     <div class="fog-layer layer1"></div>
     <div class="fog-layer layer2"></div>
     <div class="fog-layer layer3"></div>
   </div>
 
-  <!-- UI Content -->
+  <!-- UI -->
   <div class="logo">Spiritual Shadow</div>
-  <div id="playerInfo">Loading player data...</div>
-
+  <div id="playerInfo">Loading...</div>
   <div class="menu">
     <button onclick="showAdThenPlay()">▶ Play Now</button>
-    <button onclick="customizeShadow()">🧙 Customize Shadow</button>
+    <button onclick="customizeShadow()">🧙 Customize</button>
     <button onclick="withdraw()">💸 Withdraw</button>
   </div>
-
   <div class="floating-btns">
     <button onclick="leaderboard()">🏆 Leaderboard</button>
-    <button onclick="dailyRewards()">🎁 Daily Rewards</button>
-    <button onclick="notifications()">💌 Notifications</button>
+    <button onclick="dailyRewards()">🎁 Daily</button>
+    <button onclick="notifications()">💌 Inbox</button>
   </div>
-
   <div class="bottom-nav">
     <button onclick="missions()">📜 Missions</button>
-    <button onclick="offlineMining()">⛏ Offline Mining</button>
+    <button onclick="offlineMining()">⛏ Offline</button>
     <button onclick="shop()">🛒 Shop</button>
     <button onclick="settings()">⚙ Settings</button>
   </div>
 
   <script>
-    const bgMusic = document.getElementById("bgMusic");
-    document.body.addEventListener('click', () => {
-      if (bgMusic.paused) {
-        bgMusic.play().catch(() => console.log("Autoplay blocked"));
-      }
+    document.body.addEventListener('click',()=>{
+      const m = document.getElementById("bgMusic");
+      if(m.paused) m.play().catch(()=>console.log("blocked"));
     });
   </script>
 </body>
