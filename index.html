@@ -22,34 +22,16 @@
       }
     }
 
-    // Button actions (can be replaced later)
-    function customizeShadow() {
-      alert("Customize Shadow clicked (Coming Soon)");
-    }
-    function withdraw() {
-      alert("Withdraw feature coming soon");
-    }
-    function leaderboard() {
-      alert("Leaderboard loading...");
-    }
-    function dailyRewards() {
-      alert("Claim your daily rewards!");
-    }
-    function notifications() {
-      alert("No new messages.");
-    }
-    function missions() {
-      alert("Mission log opening...");
-    }
-    function offlineMining() {
-      alert("Offline Mining: 123 Soul Stones collected.");
-    }
-    function shop() {
-      alert("Entering the Shadow Shop...");
-    }
-    function settings() {
-      alert("Settings panel coming soon.");
-    }
+    // Functional placeholder actions
+    function customizeShadow() { alert("Customize Shadow coming soon."); }
+    function withdraw() { alert("Withdraw feature coming soon."); }
+    function leaderboard() { alert("Loading leaderboard..."); }
+    function dailyRewards() { alert("You claimed your daily reward!"); }
+    function notifications() { alert("No new messages."); }
+    function missions() { alert("Mission panel opening..."); }
+    function offlineMining() { alert("Offline Mining collected: 152 shadow stones."); }
+    function shop() { alert("Entering Shadow Shop..."); }
+    function settings() { alert("Settings opening..."); }
   </script>
 
   <script type="module">
@@ -101,62 +83,20 @@
       });
     });
   </script>
-  <script>
-    #parallax-fog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.fog-layer {
-  position: absolute;
-  width: 200%;
-  height: 100%;
-  background-repeat: repeat;
-  background-size: cover;
-  opacity: 0.15;
-}
-
-.fog-layer.layer1 {
-  background-image: url('https://i.ibb.co/wrWxpyP/fog-layer1.png');
-  animation: fogMove1 60s linear infinite;
-}
-
-.fog-layer.layer2 {
-  background-image: url('https://i.ibb.co/vz5BtPt/fog-layer2.png');
-  animation: fogMove2 90s linear infinite;
-}
-
-@keyframes fogMove1 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes fogMove2 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-30%); }
-}</script>
 
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #0d0d0d, #1a1a2e);
-      background-image: url('https://i.ibb.co/GHb1Hg9/dark-forest-bg.jpg'); /* Optional background */
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: linear-gradient(to bottom right, #0a0a0a, #1a1a2e);
       color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
       min-height: 100vh;
+      position: relative;
+      overflow: hidden;
     }
 
     .logo {
@@ -165,6 +105,7 @@
       margin: 20px 0;
       color: #a259ff;
       text-shadow: 0 0 15px #5f27cd;
+      z-index: 2;
     }
 
     #playerInfo {
@@ -176,6 +117,7 @@
       font-size: 14px;
       margin-bottom: 20px;
       box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
+      z-index: 2;
     }
 
     .menu {
@@ -185,6 +127,7 @@
       margin: 20px 0;
       width: 100%;
       max-width: 300px;
+      z-index: 2;
     }
 
     .menu button {
@@ -213,6 +156,7 @@
       padding: 10px 0;
       background: rgba(0, 0, 0, 0.4);
       border-radius: 10px;
+      z-index: 2;
     }
 
     .bottom-nav button {
@@ -230,6 +174,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      z-index: 2;
     }
 
     .floating-btns button {
@@ -241,19 +186,82 @@
       box-shadow: 0 0 8px #5f27cd50;
       cursor: pointer;
     }
+
+    /* FOG PARALLAX ANIMATION */
+    #parallax-fog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .fog-layer {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      background-repeat: repeat;
+      background-size: cover;
+      opacity: 0.18;
+      filter: blur(4px) brightness(1.2);
+      mix-blend-mode: screen;
+    }
+
+    .fog-layer.layer1 {
+      background-image: url('https://i.ibb.co/wrWxpyP/fog-layer1.png');
+      animation: fogMove1 60s linear infinite, fogPulse 8s ease-in-out infinite;
+    }
+
+    .fog-layer.layer2 {
+      background-image: url('https://i.ibb.co/vz5BtPt/fog-layer2.png');
+      animation: fogMove2 90s linear infinite, fogPulse 10s ease-in-out infinite;
+    }
+
+    .fog-layer.layer3 {
+      background-image: url('https://i.ibb.co/vz5BtPt/fog-layer2.png');
+      opacity: 0.08;
+      animation: fogMove3 120s linear infinite, fogPulse 14s ease-in-out infinite;
+    }
+
+    @keyframes fogMove1 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes fogMove2 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-30%); }
+    }
+
+    @keyframes fogMove3 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-80%); }
+    }
+
+    @keyframes fogPulse {
+      0%, 100% { opacity: 0.18; filter: blur(4px) brightness(1.2); }
+      50% { opacity: 0.28; filter: blur(6px) brightness(1.4); }
+    }
   </style>
 </head>
 
 <body>
+  <!-- 🔊 Background Music -->
   <audio id="bgMusic" autoplay loop>
-  <source src="https://drive.google.com/file/d/1ICB1Ja7LGHPXhbnTl4triCvNXf9ItgxX/view?usp=drivesdk" type="audio/mpeg">
-</audio>
+    <source src="https://docs.google.com/uc?export=download&id=1ICB1Ja7LGHPXhbnTl4triCvNXf9ItgxX" type="audio/mpeg">
+  </audio>
 
-<div id="parallax-fog">
-  <div class="fog-layer layer1"></div>
-  <div class="fog-layer layer2"></div>
-  <div class="fog-layer layer3"></div>
-</div>
+  <!-- 🌫️ Parallax Fog -->
+  <div id="parallax-fog">
+    <div class="fog-layer layer1"></div>
+    <div class="fog-layer layer2"></div>
+    <div class="fog-layer layer3"></div>
+  </div>
+
+  <!-- UI Content -->
   <div class="logo">Spiritual Shadow</div>
   <div id="playerInfo">Loading player data...</div>
 
@@ -275,5 +283,14 @@
     <button onclick="shop()">🛒 Shop</button>
     <button onclick="settings()">⚙ Settings</button>
   </div>
+
+  <script>
+    const bgMusic = document.getElementById("bgMusic");
+    document.body.addEventListener('click', () => {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(() => console.log("Autoplay blocked"));
+      }
+    });
+  </script>
 </body>
 </html>
