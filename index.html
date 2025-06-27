@@ -7,14 +7,14 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>    
   <script>    
     const adScript = document.createElement('script');    
-    adScript.src = 'https://libtl.com/sdk.js';    
-    adScript.setAttribute('data-zone', '9494630');    
-    adScript.setAttribute('data-sdk', 'show_9494630');    
+    adScript.src = 'https://whephiwums.com/sdk.js';    
+    adScript.setAttribute('data-zone', '9217711');    
+    adScript.setAttribute('data-sdk', 'show_9217711');    
     document.head.appendChild(adScript);
 
     window.showAdThenPlay = function () {    
-      if (typeof show_9494630 === 'function') {    
-        show_9494630()
+      if (typeof show_9217711 === 'function') {    
+        show_9217711()
           .then(() => { window.location.href = 'game.html'; })    
           .catch(() => { window.location.href = 'game.html'; });    
       } else {    
@@ -65,22 +65,15 @@
         const data = snap.data();    
         infoBox.innerHTML = `    
           👤 ${data.name}<br>    
-          🆔 ${tg.id}<br>  
-          <p>weekly Shadow Coin: ${shadow_coin_weekly}</p>,
-          <p>Total Vaild Refer: ${total_vaild_refer}</p>,
+          🆔 ${data.uid}<br>    
           💰 ${data.available_shadow_coin} Shadow Coins<br>    
           💵 Balance: $${data.usd_balance.toFixed(2)}    
         `;    
       });    
     });    
   </script>    
-  
 
-  <style>   <body>
-  <!-- 🎶 Background Music -->
-  <audio id="bgMusic" autoplay loop>
-    <source src="https://media.vocaroo.com/mp3/1mZoJhLE71L9" type="audio/mpeg">
-  </audio> 
+  <style>    
     body {    
       margin: 0;    
       font-family: 'Segoe UI', sans-serif;    
@@ -217,7 +210,7 @@
   <div id="playerInfo">Loading player data...</div>    
   <div class="menu">    
     <button onclick="showAdThenPlay()">▶ Play Now</button>    
-    <button onclick="openwindow.customize_shadow()"🧙 Customize Shadow</button>    
+    <button>🧙 Customize Shadow</button>    
     <button>🎮 Game Modes</button>    
   </div>    
   <div class="floating-btns">    
