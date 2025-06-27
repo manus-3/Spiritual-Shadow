@@ -7,14 +7,14 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>    
   <script>    
     const adScript = document.createElement('script');    
-    adScript.src = 'https://whephiwums.com/sdk.js';    
-    adScript.setAttribute('data-zone', '9217711');    
-    adScript.setAttribute('data-sdk', 'show_9217711');    
+    adScript.src = 'https://libtl.com/sdk.js';    
+    adScript.setAttribute('data-zone', '9494630');    
+    adScript.setAttribute('data-sdk', 'show_9494630');    
     document.head.appendChild(adScript);
 
     window.showAdThenPlay = function () {    
-      if (typeof show_9217711 === 'function') {    
-        show_9217711()
+      if (typeof show_9494630 === 'function') {    
+        show_9494630()
           .then(() => { window.location.href = 'game.html'; })    
           .catch(() => { window.location.href = 'game.html'; });    
       } else {    
@@ -65,15 +65,25 @@
         const data = snap.data();    
         infoBox.innerHTML = `    
           👤 ${data.name}<br>    
-          🆔 ${data.uid}<br>    
-          💰 ${data.available_shadow_coin} Shadow Coins<br>    
+          🆔 ${data.td_id}<br>    
+       <p>🪙Availabe shadow Coin:${data.available_shadow_coin},
+       <p>🪙Weekly Shadow Coin:${data.shadow_coin_weekly},
           💵 Balance: $${data.usd_balance.toFixed(2)}    
         `;    
       });    
     });    
   </script>    
+  <style>   
+    body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-image: url('https://yourdomain.com/assets/spiritual-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #f0f0f0;
+}
 
-  <style>    
     body {    
       margin: 0;    
       font-family: 'Segoe UI', sans-serif;    
