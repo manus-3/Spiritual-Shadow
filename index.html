@@ -19,193 +19,143 @@
   }
 }
 
-  </script>  <script type="module">
+  </script>
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+  authDomain: "spiritual-shadow.firebaseapp.com",
+  projectId: "spiritual-shadow"
+};
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-      authDomain: "spiritual-shadow.firebaseapp.com",
-      projectId: "spiritual-shadow"
-    };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const tg = window.Telegram.WebApp;
+tg.ready();
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+const infoBox = document.getElementById("playerInfo");
 
-    const infoBox = document.getElementById("playerInfo");
-
-    signInAnonymously(auth).then(() => {
-      onAuthStateChanged(auth, async user => {
-        if (!user) return;
-        const uid = user.uid;
-        const ref = doc(db, "users", uid);
-        let snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, {
-            uid,
-            name: tg.initDataUnsafe.user?.first_name || "Unknown",
-            tg_id: tg.initDataUnsafe.user?.id || "N/A",
-            created_at: Date.now(),
-            shadow_coin_weekly: 0,
-            shadow_coin_total: 0,
-            available_shadow_coin: 0,
-            total_valid_refer: 0,
-            usd_balance: 0
-          });
-          snap = await getDoc(ref);
-        }
-        const data = snap.data();
-        infoBox.innerHTML = `
-          <strong>👤 ${data.name}</strong><br>
-          🆔 ${data.tg_id}<br>
-          🪙 Available: ${data.available_shadow_coin}<br>
-          🪙 Weekly: ${data.shadow_coin_weekly}<br>
-          🤝 Referrals: ${data.total_valid_refer}<br>
-          💵 Balance: $${data.usd_balance.toFixed(2)}
-        `;
+signInAnonymously(auth).then(() => {
+  onAuthStateChanged(auth, async user => {
+    if (!user) return;
+    const uid = user.uid;
+    const ref = doc(db, "users", uid);
+    let snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        uid,
+        name: tg.initDataUnsafe.user?.first_name || "Unknown",
+        tg_id: tg.initDataUnsafe.user?.id || "N/A",
+        created_at: Date.now(),
+        shadow_coin_weekly: 0,
+        shadow_coin_total: 0,
+        available_shadow_coin: 0,
+        total_valid_refer: 0,
+        usd_balance: 0
       });
-    });
-  </script>  <style>
+      snap = await getDoc(ref);
+    }
+    const data = snap.data();
+    infoBox.innerHTML = `
+      <div class="character-container">
+        <img src="character.png" alt="Character" class="character">
+        <div class="stats">
+          <p>👤 ${data.name}</p>
+          <p>🆔 ID: ${data.tg_id}</p>
+          <p>🪙 Avail. Coins: ${data.available_shadow_coin}</p>
+          <p>🪙 Weekly Coins: ${data.shadow_coin_weekly}</p>
+          <p>🧐 Valid Refers: ${data.total_valid_refer}</p>
+          <p>💵 Balance: $${data.usd_balance.toFixed(2)}</p>
+        </div>
+      </div>`;
+  });
+});
+
+  </script>
+  <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-image: url('https://lh3.googleusercontent.com/d/1IS29FJXxi71z_Z7X5_3oY2NnDz-Db45Z');
+      background-image: url('https://drive.google.com/uc?export=download&id=1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
       background-size: cover;
-      background-repeat: no-repeat;
       background-position: center;
       background-attachment: fixed;
       color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    #parallax-fog {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
       overflow: hidden;
     }
-    .fog-layer {
-      position: absolute;
-      width: 200%;
-      height: 100%;
-      background-repeat: repeat;
-      background-size: cover;
-      opacity: 0.18;
-      filter: blur(4px) brightness(1.2);
-      mix-blend-mode: screen;
+    .character-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px;
     }
-    .fog1 {
-      background-image: url('https://i.ibb.co/wrWxpyP/fog-layer1.png');
-      animation: moveFog1 30s linear infinite;
+    .character {
+      width: 100px;
+      height: auto;
     }
-    .fog2 {
-      background-image: url('https://i.ibb.co/vz5BtPt/fog-layer2.png');
-      animation: moveFog2 30s linear infinite;
-      opacity: 0.1;
-    }
-    @keyframes moveFog1 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    @keyframes moveFog2 {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-80%); }
-    }
-
-    .logo {
-      font-size: 2em;
-      font-weight: bold;
-      margin: 20px 0;
-      color: #5f27cd;
-      z-index: 1;
-      position: relative;
-    }
-    #playerInfo {
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 12px;
-      padding: 15px;
-      width: 90%;
-      max-width: 400px;
-      font-size: 14px;
-      margin-bottom: 20px;
-      z-index: 2;
-      position: relative;
-      box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
+    .stats p {
+      margin: 4px 0;
     }
     .menu {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin: 20px 0;
-      width: 100%;
+      margin: 20px auto;
+      width: 90%;
       max-width: 300px;
-      z-index: 2;
-      position: relative;
     }
     .menu button {
-      background: #5f27cd;
-      border: none;
-      padding: 15px;
-      border-radius: 10px;
+      background: #ff9f43;
       color: white;
+      padding: 15px;
       font-size: 16px;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
     }
     .floating-btns {
       position: fixed;
       left: 10px;
-      top: 100px;
+      bottom: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      z-index: 2;
     }
     .floating-btns button {
-      background: #222;
+      background: rgba(0, 0, 0, 0.5);
       color: white;
+      padding: 10px 15px;
       border: 1px solid #5f27cd;
-      border-radius: 10px;
-      padding: 10px;
+      border-radius: 8px;
     }
-  </style></head>
+  </style>
+</head>
 <body>
-  <div id="parallax-fog">
-    <div class="fog-layer fog1"></div>
-    <div class="fog-layer fog2"></div>
-  </div>  <div class="logo">Spiritual Shadow</div>
   <div id="playerInfo">Loading player data...</div>
   <div class="menu">
     <button onclick="showAdThenPlay()">▶ Play Now</button>
+    <button>Customize Shadow</button>
+    <button>Game Modes</button>
   </div>
   <div class="floating-btns">
-    <button onclick="location.href='leaderboard.html'">🏆 Leaderboard</button>
-    <button onclick="location.href='rewards.html'">🎁 Daily Rewards</button>
-    <button onclick="location.href='notifications.html'">💌 Notifications</button>
     <button onclick="location.href='missions.html'">📜 Missions</button>
     <button onclick="location.href='mining.html'">⛏ Offline Mining</button>
     <button onclick="location.href='shop.html'">🛒 Shop</button>
     <button onclick="location.href='settings.html'">⚙ Settings</button>
-  </div>  <script>
+  </div>
+  <script>
     const bgMusic = new Audio("https://media.vocaroo.com/mp3/1mZoJhLE71L9");
     bgMusic.loop = true;
     document.body.addEventListener("click", () => {
       if (bgMusic.paused) {
-        bgMusic.play().catch(err => console.log("Music blocked:", err));
+        bgMusic.play().catch((err) => console.log("Music blocked:", err));
       }
     });
-  </script></body>
+  </script>
+</body>
 </html>
