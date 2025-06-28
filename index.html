@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spiritual Shadow - Lobby</title>
@@ -6,62 +7,67 @@
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
+      background: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725') no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
       color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      padding: 0;
+      height: 100vh;
+      position: relative;
     }#playerInfo {
-  margin-top: auto;
-  margin-bottom: 150px;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 15px 20px;
+  position: absolute;
+  top: 110px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 15px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-  z-index: 2;
+  font-size: 14px;
+  text-align: right;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  max-width: 220px;
 }
 
 .menu {
   position: absolute;
-  bottom: 60px;
+  bottom: 80px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
   align-items: center;
-  z-index: 3;
+  gap: 15px;
 }
 
 .menu button {
-  background: #2d2c5a;
-  color: #f0f0f0;
+  background: linear-gradient(45deg, #fbb03b, #ff8c00);
+  border: none;
   padding: 12px 24px;
-  font-size: 16px;
-  border: 2px solid #5f27cd;
-  border-radius: 10px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   cursor: pointer;
-  width: 220px;
-  transition: 0.3s ease;
+  transition: all 0.2s;
 }
 
 .menu button:hover {
-  background: #5f27cd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
 }
 
   </style>
-</head><body>
-  <div id="playerInfo">Loading player data...</div>  <div class="menu">
+</head>
+<body>
+  <div id="playerInfo">Loading player data...</div>
+  <div class="menu">
     <button onclick="showAdThenPlay()">▶ Play Now</button>
-    <button onclick="location.href='customize.html'">🧙 Customize Shadow</button>
-    <button onclick="location.href='modes.html'">🎮 Game Modes</button>
-    <button onclick="location.href='withdraw.html'">💵 Withdraw</button>
+    <button onclick="window.location.href='withdraw.html'">💸 Withdraw</button>
   </div>  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
     const adScript = document.createElement('script');
     adScript.src = 'https://libtl.com/sdk.js';
     adScript.setAttribute('data-zone', '9494630');
@@ -77,54 +83,56 @@
         setTimeout(() => window.location.href = 'game.html', 3000);
       }
     }
-  </script>  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-      authDomain: "spiritual-shadow.firebaseapp.com",
-      projectId: "spiritual-shadow"
-    };
+    // Firebase auth (minimal)
+    import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js").then(({ initializeApp }) => {
+      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js").then(({ getAuth, signInAnonymously, onAuthStateChanged }) => {
+        import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js").then(({ getFirestore, doc, getDoc, setDoc }) => {
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+          const firebaseConfig = {
+            apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+            authDomain: "spiritual-shadow.firebaseapp.com",
+            projectId: "spiritual-shadow"
+          };
 
-    const infoBox = document.getElementById("playerInfo");
+          const app = initializeApp(firebaseConfig);
+          const auth = getAuth(app);
+          const db = getFirestore(app);
 
-    signInAnonymously(auth).then(() => {
-      onAuthStateChanged(auth, async user => {
-        if (!user) return;
-        const uid = user.uid;
-        const ref = doc(db, "users", uid);
-        let snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, {
-            uid,
-            name: tg.initDataUnsafe.user?.first_name || "Unknown",
-            tg_id: tg.initDataUnsafe.user?.id || "N/A",
-            created_at: Date.now(),
-            shadow_coin_weekly: 0,
-            shadow_coin_total: 0,
-            available_shadow_coin: 0,
-            total_valid_refer: 0,
-            usd_balance: 0
+          const infoBox = document.getElementById("playerInfo");
+
+          signInAnonymously(auth).then(() => {
+            onAuthStateChanged(auth, async user => {
+              if (!user) return;
+              const uid = user.uid;
+              const ref = doc(db, "users", uid);
+              let snap = await getDoc(ref);
+              if (!snap.exists()) {
+                await setDoc(ref, {
+                  uid,
+                  name: tg.initDataUnsafe.user?.first_name || "Unknown",
+                  tg_id: tg.initDataUnsafe.user?.id || "N/A",
+                  created_at: Date.now(),
+                  shadow_coin_weekly: 0,
+                  shadow_coin_total: 0,
+                  available_shadow_coin: 0,
+                  total_valid_refer: 0,
+                  usd_balance: 0
+                });
+                snap = await getDoc(ref);
+              }
+              const data = snap.data();
+              infoBox.innerHTML = `
+                👤 ${data.name}<br>
+                🆔 ${data.uid}<br>
+                💰 Shadow Coin: ${data.available_shadow_coin}<br>
+                💵 Balance: $${data.usd_balance.toFixed(2)}
+              `;
+            });
           });
-          snap = await getDoc(ref);
-        }
-        const data = snap.data();
-        infoBox.innerHTML = `
-          👤 ${data.name}<br>
-          🆔 ${data.tg_id}<br>
-          🪙 Shadow Coins: ${data.available_shadow_coin}<br>
-          🪙 Weekly Coins: ${data.shadow_coin_weekly}<br>
-          🧑‍🤝‍🧑 Valid Refers: ${data.total_valid_refer}<br>
-          💵 Balance: $${data.usd_balance.toFixed(2)}
-        `;
+
+        });
       });
     });
-  </script></body></html>
+  </script></body>
+</html>
