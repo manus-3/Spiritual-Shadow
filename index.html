@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spiritual Shadow - Lobby</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
@@ -17,40 +17,36 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-end;
+      min-height: 100vh;
+      position: relative;
     }#playerInfo {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  padding: 15px;
   position: absolute;
   left: 20px;
-  bottom: 80px;
-  max-width: 280px;
+  bottom: 120px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 10px;
   font-size: 14px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.withdraw-btn {
-  background: linear-gradient(145deg, #7b2cbf, #5f27cd);
+.menu {
+  margin-bottom: 30px;
+}
+
+.menu button {
+  background: linear-gradient(145deg, #7d5fff, #5f27cd);
   border: none;
   padding: 18px 30px;
   border-radius: 12px;
   color: white;
   font-size: 18px;
-  font-weight: bold;
   cursor: pointer;
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 4px 15px rgba(127, 0, 255, 0.4);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
   </style>
-</head>
-<body>
-  <div id="playerInfo">Loading player data...</div>
-  <button class="withdraw-btn" onclick="location.href='withdraw.html'">Withdraw</button>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -91,15 +87,19 @@ signInAnonymously(auth).then(() => {
     const data = snap.data();
     infoBox.innerHTML = `
       👤 ${data.name}<br>
-      🆔 ${data.tg_id}<br>
-      🪙 Availabe shadow Coin: ${data.available_shadow_coin}<br>
-      🪙 Weekly Shadow Coin: ${data.shadow_coin_weekly}<br>
-      Total Vaild Refer: ${data.total_valid_refer}<br>
+      🆔 ${data.uid}<br>
+      💰 ${data.available_shadow_coin} Shadow Coins<br>
       💵 Balance: $${data.usd_balance.toFixed(2)}
     `;
   });
 });
 
   </script>
+</head>
+<body>
+  <div id="playerInfo">Loading player data...</div>
+  <div class="menu">
+    <button onclick="window.location.href='withdraw.html'">💸 Withdraw</button>
+  </div>
 </body>
 </html>
