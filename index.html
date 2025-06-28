@@ -1,138 +1,136 @@
 <!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spiritual Shadow - Lobby</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725') no-repeat center center fixed;
-      background-size: cover;
-      color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0;
-      height: 100vh;
-      position: relative;
-    }#playerInfo {
-  position: absolute;
-  top: 110px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 10px 15px;
-  border-radius: 10px;
-  font-size: 14px;
-  text-align: right;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  max-width: 220px;
-}
-
-.menu {
-  position: absolute;
-  bottom: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-
-.menu button {
-  background: linear-gradient(45deg, #fbb03b, #ff8c00);
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #fff;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.menu button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
-}
-
-  </style>
-</head>
-<body>
-  <div id="playerInfo">Loading player data...</div>
-  <div class="menu">
-    <button onclick="showAdThenPlay()">▶ Play Now</button>
-    <button onclick="window.location.href='withdraw.html'">💸 Withdraw</button>
-  </div>  <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-
-    const adScript = document.createElement('script');
-    adScript.src = 'https://libtl.com/sdk.js';
-    adScript.setAttribute('data-zone', '9494630');
-    adScript.setAttribute('data-sdk', 'show_9494630');
-    document.head.appendChild(adScript);
-
-    window.showAdThenPlay = function () {
-      if (typeof show_9494630 === 'function') {
-        show_9494630()
-          .then(() => { window.location.href = 'game.html'; })
-          .catch(() => { window.location.href = 'game.html'; });
-      } else {
-        setTimeout(() => window.location.href = 'game.html', 3000);
-      }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spiritual Shadow - Lobby</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+      const adScript = document.createElement('script');
+      adScript.src = 'https://libtl.com/sdk.js';
+      adScript.setAttribute('data-zone', '9494630');
+      adScript.setAttribute('data-sdk', 'show_9494630');
+      document.head.appendChild(adScript);window.showAdThenPlay = function () {
+    if (typeof show_9494630 === 'function') {
+      show_9494630()
+        .then(() => { window.location.href = 'game.html'; })
+        .catch(() => { window.location.href = 'game.html'; });
+    } else {
+      setTimeout(() => window.location.href = 'game.html', 3000);
     }
+  };
+</script>
 
-    // Firebase auth (minimal)
-    import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js").then(({ initializeApp }) => {
-      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js").then(({ getAuth, signInAnonymously, onAuthStateChanged }) => {
-        import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js").then(({ getFirestore, doc, getDoc, setDoc }) => {
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-          const firebaseConfig = {
-            apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-            authDomain: "spiritual-shadow.firebaseapp.com",
-            projectId: "spiritual-shadow"
-          };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+    authDomain: "spiritual-shadow.firebaseapp.com",
+    projectId: "spiritual-shadow"
+  };
 
-          const app = initializeApp(firebaseConfig);
-          const auth = getAuth(app);
-          const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const tg = window.Telegram.WebApp;
+  tg.ready();
 
-          const infoBox = document.getElementById("playerInfo");
+  const infoBox = document.getElementById("playerInfo");
 
-          signInAnonymously(auth).then(() => {
-            onAuthStateChanged(auth, async user => {
-              if (!user) return;
-              const uid = user.uid;
-              const ref = doc(db, "users", uid);
-              let snap = await getDoc(ref);
-              if (!snap.exists()) {
-                await setDoc(ref, {
-                  uid,
-                  name: tg.initDataUnsafe.user?.first_name || "Unknown",
-                  tg_id: tg.initDataUnsafe.user?.id || "N/A",
-                  created_at: Date.now(),
-                  shadow_coin_weekly: 0,
-                  shadow_coin_total: 0,
-                  available_shadow_coin: 0,
-                  total_valid_refer: 0,
-                  usd_balance: 0
-                });
-                snap = await getDoc(ref);
-              }
-              const data = snap.data();
-              infoBox.innerHTML = `
-                👤 ${data.name}<br>
-                🆔 ${data.uid}<br>
-                💰 Shadow Coin: ${data.available_shadow_coin}<br>
-                💵 Balance: $${data.usd_balance.toFixed(2)}
-              `;
-            });
-          });
-
+  signInAnonymously(auth).then(() => {
+    onAuthStateChanged(auth, async user => {
+      if (!user) return;
+      const uid = user.uid;
+      const ref = doc(db, "users", uid);
+      let snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          uid,
+          name: tg.initDataUnsafe.user?.first_name || "Unknown",
+          tg_id: tg.initDataUnsafe.user?.id || "N/A",
+          created_at: Date.now(),
+          shadow_coin_weekly: 0,
+          shadow_coin_total: 0,
+          available_shadow_coin: 0,
+          total_valid_refer: 0,
+          usd_balance: 0
         });
-      });
+        snap = await getDoc(ref);
+      }
+      const data = snap.data();
+      infoBox.innerHTML = `
+        👤 ${data.name}<br>
+        🆔 ${data.tg_id}<br>
+        🪙 Available Shadow Coin: ${data.available_shadow_coin}<br>
+        🪙 Weekly Shadow Coin: ${data.shadow_coin_weekly}<br>
+        🧑‍🤝‍🧑 Total Valid Refer: ${data.total_valid_refer}<br>
+        💵 Balance: $${data.usd_balance.toFixed(2)}
+      `;
     });
-  </script></body>
+  });
+</script>
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  #playerInfo {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 15px;
+    width: 250px;
+    font-size: 13px;
+    position: absolute;
+    left: 15px;
+    top: 180px;
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 280px;
+    z-index: 2;
+  }
+
+  .menu button {
+    background: linear-gradient(to right, #f39c12, #f1c40f);
+    border: none;
+    padding: 15px 25px;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+</style>
+
+  </head>
+  <body>
+    <div id="playerInfo">Loading player data...</div>
+    <div class="menu">
+      <button onclick="showAdThenPlay()">▶ PLAY NOW</button>
+      <button onclick="location.href='withdraw.html'">💸 Withdraw</button>
+    </div>
+  </body>
 </html>
