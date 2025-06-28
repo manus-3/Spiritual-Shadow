@@ -1,105 +1,158 @@
 <!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spiritual Shadow - Lobby</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-attachment: fixed;
-      color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      min-height: 100vh;
-      position: relative;
-    }#playerInfo {
-  position: absolute;
-  left: 20px;
-  bottom: 120px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 14px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.menu {
-  margin-bottom: 30px;
-}
-
-.menu button {
-  background: linear-gradient(145deg, #7d5fff, #5f27cd);
-  border: none;
-  padding: 18px 30px;
-  border-radius: 12px;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-  </style>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";const firebaseConfig = {
-  apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-  authDomain: "spiritual-shadow.firebaseapp.com",
-  projectId: "spiritual-shadow"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const tg = window.Telegram.WebApp;
-tg.ready();
-
-const infoBox = document.getElementById("playerInfo");
-
-signInAnonymously(auth).then(() => {
-  onAuthStateChanged(auth, async user => {
-    if (!user) return;
-    const uid = user.uid;
-    const ref = doc(db, "users", uid);
-    let snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, {
-        uid,
-        name: tg.initDataUnsafe.user?.first_name || "Unknown",
-        tg_id: tg.initDataUnsafe.user?.id || "N/A",
-        created_at: Date.now(),
-        shadow_coin_weekly: 0,
-        shadow_coin_total: 0,
-        available_shadow_coin: 0,
-        total_valid_refer: 0,
-        usd_balance: 0
-      });
-      snap = await getDoc(ref);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spiritual Shadow - Lobby</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+      const adScript = document.createElement('script');
+      adScript.src = 'https://libtl.com/sdk.js';
+      adScript.setAttribute('data-zone', '9494630');
+      adScript.setAttribute('data-sdk', 'show_9494630');
+      document.head.appendChild(adScript);window.showAdThenPlay = function () {
+    if (typeof show_9494630 === 'function') {
+      show_9494630()
+        .then(() => {
+          window.location.href = 'game.html';
+        })
+        .catch(() => {
+          window.location.href = 'game.html';
+        });
+    } else {
+      setTimeout(() => (window.location.href = 'game.html'), 3000);
     }
-    const data = snap.data();
-    infoBox.innerHTML = `
-      👤 ${data.name}<br>
-      🆔 ${data.uid}<br>
-      💰 ${data.available_shadow_coin} Shadow Coins<br>
-      💵 Balance: $${data.usd_balance.toFixed(2)}
-    `;
-  });
-});
+  };
+</script>
 
-  </script>
-</head>
-<body>
-  <div id="playerInfo">Loading player data...</div>
-  <div class="menu">
-    <button onclick="window.location.href='withdraw.html'">💸 Withdraw</button>
-  </div>
-</body>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    signInAnonymously,
+    onAuthStateChanged,
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+    authDomain: "spiritual-shadow.firebaseapp.com",
+    projectId: "spiritual-shadow",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
+  const infoBox = document.getElementById("playerInfo");
+
+  signInAnonymously(auth).then(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+      const uid = user.uid;
+      const ref = doc(db, "users", uid);
+      let snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          uid,
+          name: tg.initDataUnsafe.user?.first_name || "Unknown",
+          tg_id: tg.initDataUnsafe.user?.id || "N/A",
+          created_at: Date.now(),
+          shadow_coin_weekly: 0,
+          shadow_coin_total: 0,
+          available_shadow_coin: 0,
+          total_valid_refer: 0,
+          usd_balance: 0,
+        });
+        snap = await getDoc(ref);
+      }
+      const data = snap.data();
+      infoBox.innerHTML = `
+        👤 ${data.name}<br>
+        🆔 ${data.td_id}<br>
+        <p>🪙Availabe shadow Coin: ${data.available_shadow_coin}</p>
+        <p>🪙Weekly Shadow Coin: ${data.shadow_coin_weekly}</p>
+        <p> Total Vaild Refer: ${data.total_vaild_refer}</p>
+        💵 Balance: $${data.usd_balance.toFixed(2)}
+      `;
+    });
+  });
+</script>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  #playerInfo {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 14px;
+    position: absolute;
+    top: 160px;
+    left: 20px;
+    max-width: 300px;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 350px;
+    width: 100%;
+    max-width: 300px;
+    z-index: 1;
+    position: relative;
+    align-items: center;
+  }
+
+  .menu button {
+    background: #5f27cd;
+    border: none;
+    padding: 18px;
+    border-radius: 12px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .menu button.withdraw {
+    background: #7d3cff;
+    font-size: 20px;
+    font-weight: bold;
+  }
+</style>
+
+  </head>
+  <body>
+    <div id="playerInfo">Loading player data...</div>
+    <div class="menu">
+      <button class="withdraw" onclick="location.href='withdraw.html'">💸 Withdraw</button>
+      <button onclick="showAdThenPlay()">▶ Play Now</button>
+      <button>🧙 Customize Shadow</button>
+      <button>🎮 Game Modes</button>
+    </div>
+  </body>
 </html>
