@@ -194,6 +194,15 @@
       <button onclick="showAdThenPlay()">▶ Play Now</button>
       <button>🧙 Customize Shadow</button>
       <button>🎮 Game Modes</button>
-    </div>
+    </div><audio id="bgm" src="https://media.vocaroo.com/mp3/1epgRjrvWdWF" loop></audio>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById("bgm");
+    setTimeout(() => {
+      audio.play().catch(err => console.log("Autoplay blocked:", err));
+    }, 1000); // 1 second delay helps
+  });
+</script>
   </body>
 </html>
