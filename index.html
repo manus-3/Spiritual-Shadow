@@ -1,136 +1,105 @@
 <!DOCTYPE html><html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spiritual Shadow - Lobby</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-      const adScript = document.createElement('script');
-      adScript.src = 'https://libtl.com/sdk.js';
-      adScript.setAttribute('data-zone', '9494630');
-      adScript.setAttribute('data-sdk', 'show_9494630');
-      document.head.appendChild(adScript);window.showAdThenPlay = function () {
-    if (typeof show_9494630 === 'function') {
-      show_9494630()
-        .then(() => { window.location.href = 'game.html'; })
-        .catch(() => { window.location.href = 'game.html'; });
-    } else {
-      setTimeout(() => window.location.href = 'game.html', 3000);
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spiritual Shadow - Lobby</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }#playerInfo {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 15px;
+  position: absolute;
+  left: 20px;
+  bottom: 80px;
+  max-width: 280px;
+  font-size: 14px;
+}
+
+.withdraw-btn {
+  background: linear-gradient(145deg, #7b2cbf, #5f27cd);
+  border: none;
+  padding: 18px 30px;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 15px rgba(127, 0, 255, 0.4);
+}
+
+  </style>
+</head>
+<body>
+  <div id="playerInfo">Loading player data...</div>
+  <button class="withdraw-btn" onclick="location.href='withdraw.html'">Withdraw</button>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+  authDomain: "spiritual-shadow.firebaseapp.com",
+  projectId: "spiritual-shadow"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const tg = window.Telegram.WebApp;
+tg.ready();
+
+const infoBox = document.getElementById("playerInfo");
+
+signInAnonymously(auth).then(() => {
+  onAuthStateChanged(auth, async user => {
+    if (!user) return;
+    const uid = user.uid;
+    const ref = doc(db, "users", uid);
+    let snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        uid,
+        name: tg.initDataUnsafe.user?.first_name || "Unknown",
+        tg_id: tg.initDataUnsafe.user?.id || "N/A",
+        created_at: Date.now(),
+        shadow_coin_weekly: 0,
+        shadow_coin_total: 0,
+        available_shadow_coin: 0,
+        total_valid_refer: 0,
+        usd_balance: 0
+      });
+      snap = await getDoc(ref);
     }
-  };
-</script>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-    authDomain: "spiritual-shadow.firebaseapp.com",
-    projectId: "spiritual-shadow"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const tg = window.Telegram.WebApp;
-  tg.ready();
-
-  const infoBox = document.getElementById("playerInfo");
-
-  signInAnonymously(auth).then(() => {
-    onAuthStateChanged(auth, async user => {
-      if (!user) return;
-      const uid = user.uid;
-      const ref = doc(db, "users", uid);
-      let snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          uid,
-          name: tg.initDataUnsafe.user?.first_name || "Unknown",
-          tg_id: tg.initDataUnsafe.user?.id || "N/A",
-          created_at: Date.now(),
-          shadow_coin_weekly: 0,
-          shadow_coin_total: 0,
-          available_shadow_coin: 0,
-          total_valid_refer: 0,
-          usd_balance: 0
-        });
-        snap = await getDoc(ref);
-      }
-      const data = snap.data();
-      infoBox.innerHTML = `
-        👤 ${data.name}<br>
-        🆔 ${data.tg_id}<br>
-        🪙 Available Shadow Coin: ${data.available_shadow_coin}<br>
-        🪙 Weekly Shadow Coin: ${data.shadow_coin_weekly}<br>
-        🧑‍🤝‍🧑 Total Valid Refer: ${data.total_valid_refer}<br>
-        💵 Balance: $${data.usd_balance.toFixed(2)}
-      `;
-    });
+    const data = snap.data();
+    infoBox.innerHTML = `
+      👤 ${data.name}<br>
+      🆔 ${data.tg_id}<br>
+      🪙 Availabe shadow Coin: ${data.available_shadow_coin}<br>
+      🪙 Weekly Shadow Coin: ${data.shadow_coin_weekly}<br>
+      Total Vaild Refer: ${data.total_valid_refer}<br>
+      💵 Balance: $${data.usd_balance.toFixed(2)}
+    `;
   });
-</script>
+});
 
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    position: relative;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
-
-  #playerInfo {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 12px;
-    padding: 15px;
-    width: 250px;
-    font-size: 13px;
-    position: absolute;
-    left: 15px;
-    top: 180px;
-    z-index: 2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-  }
-
-  .menu {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 280px;
-    z-index: 2;
-  }
-
-  .menu button {
-    background: linear-gradient(to right, #f39c12, #f1c40f);
-    border: none;
-    padding: 15px 25px;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  }
-</style>
-
-  </head>
-  <body>
-    <div id="playerInfo">Loading player data...</div>
-    <div class="menu">
-      <button onclick="showAdThenPlay()">▶ PLAY NOW</button>
-      <button onclick="location.href='withdraw.html'">💸 Withdraw</button>
-    </div>
-  </body>
+  </script>
+</body>
 </html>
