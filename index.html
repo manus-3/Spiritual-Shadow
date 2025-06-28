@@ -84,6 +84,44 @@
     });
   });
 </script>
+   <!-- Floating Buttons -->
+<div class="floating-btns">
+  <button onclick="location.href='leaderboard.html'">🏆 Leaderboard</button>
+  <button onclick="location.href='rewards.html'">🎁 Daily Rewards</button>
+  <button onclick="location.href='notifications.html'">💌 Notifications</button>
+</div>
+    <style>
+  /* Floating Button Styles */
+  .floating-btns {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+    animation: floatIn 1s ease-out forwards;
+    transform: translateY(100px);
+    opacity: 0;
+  }
+
+  .floating-btns button {
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: 1px solid #5f27cd;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  @keyframes floatIn {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
 <style>
   body {
     margin: 0;
