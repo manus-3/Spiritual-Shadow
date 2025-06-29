@@ -81,27 +81,19 @@
   </script>
 
   <!-- Background Music -->
-  <audio id="bgm" src="http://sndup.net/zx24r" loop></audio>
+<audio id="bgm" src="http://sndup.net/zx24r" loop></audio>
 
 <script>
   window.addEventListener("DOMContentLoaded", () => {
     const bgm = document.getElementById("bgm");
-
-    const tryPlay = () => {
-      bgm.play().then(() => {
-        console.log("BGM playing");
-      }).catch(err => {
-        console.log("Autoplay blocked, will wait for user interaction");
-        document.body.addEventListener("click", () => {
-          bgm.play();
-        }, { once: true });
-      });
-    };
-
-    tryPlay();
+    const startAudio = () => bgm.play().catch(() => {
+      document.body.addEventListener("click", () => {
+        bgm.play();
+      }, { once: true });
+    });
+    startAudio();
   });
-</script>
-  <!-- Styles -->
+</script>  <!-- Styles -->
   <style>
     body {
       margin: 0;
