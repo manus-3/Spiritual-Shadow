@@ -1,218 +1,204 @@
-<!DOCTYPE html><html lang="en">
-  <head>
-    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spiritual Shadow - Lobby</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-      const adScript = document.createElement('script');
-      adScript.src = 'https://libtl.com/sdk.js';
-      adScript.setAttribute('data-zone', '9494630');
-      adScript.setAttribute('data-sdk', 'show_9494630');
-      document.head.appendChild(adScript);window.showAdThenPlay = function () {
-    if (typeof show_9494630 === 'function') {
-      show_9494630()
-        .then(() => {
-          window.location.href = 'game.html';
-        })
-        .catch(() => {
-          window.location.href = 'game.html';
-        });
-    } else {
-      setTimeout(() => (window.location.href = 'game.html'), 3000);
-    }
-  };
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spiritual Shadow - Lobby</title>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth,
-    signInAnonymously,
-    onAuthStateChanged,
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc,
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
-    authDomain: "spiritual-shadow.firebaseapp.com",
-    projectId: "spiritual-shadow",
-  };
+  <!-- Ad Script -->
+  <script>
+    const adScript = document.createElement('script');
+    adScript.src = 'https://libtl.com/sdk.js';
+    adScript.setAttribute('data-zone', '9494630');
+    adScript.setAttribute('data-sdk', 'show_9494630');
+    document.head.appendChild(adScript);
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const tg = window.Telegram.WebApp;
-  tg.ready();
-
-  const infoBox = document.getElementById("playerInfo");
-
-  signInAnonymously(auth).then(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
-      const uid = user.uid;
-      const ref = doc(db, "users", uid);
-      let snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          uid,
-          name: tg.initDataUnsafe.user?.first_name || "Unknown",
-          tg_id: tg.initDataUnsafe.user?.id || "N/A",
-          created_at: Date.now(),
-          shadow_coin_weekly: 0,
-          shadow_coin_total: 0,
-          available_shadow_coin: 0,
-          total_valid_refer: 0,
-          usd_balance: 0,
-        });
-        snap = await getDoc(ref);
+    window.showAdThenPlay = function () {
+      if (typeof show_9494630 === 'function') {
+        show_9494630()
+          .then(() => window.location.href = 'game.html')
+          .catch(() => window.location.href = 'game.html');
+      } else {
+        setTimeout(() => window.location.href = 'game.html', 3000);
       }
-      const data = snap.data();
-      infoBox.innerHTML = `
-        👤 ${data.name}<br>
-        🆔 ${data.td_id}<br>
-        <p>🪙Availabe shadow Coin: ${data.available_shadow_coin}</p>
-        <p>🪙Weekly Shadow Coin: ${data.shadow_coin_weekly}</p>
-        <p> Total Vaild Refer: ${data.total_vaild_refer}</p>
-        💵 Balance: $${data.usd_balance.toFixed(2)}
-      `;
+    };
+  </script>
+
+  <!-- Firebase Auth & Firestore -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXgSGleDzngVCD2R-LzJfzACPoYx6xnpk",
+      authDomain: "spiritual-shadow.firebaseapp.com",
+      projectId: "spiritual-shadow"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
+    const infoBox = document.getElementById("playerInfo");
+
+    signInAnonymously(auth).then(() => {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) return;
+        const uid = user.uid;
+        const ref = doc(db, "users", uid);
+        let snap = await getDoc(ref);
+        if (!snap.exists()) {
+          await setDoc(ref, {
+            uid,
+            name: tg.initDataUnsafe.user?.first_name || "Unknown",
+            tg_id: tg.initDataUnsafe.user?.id || "N/A",
+            created_at: Date.now(),
+            shadow_coin_weekly: 0,
+            shadow_coin_total: 0,
+            available_shadow_coin: 0,
+            total_valid_refer: 0,
+            usd_balance: 0
+          });
+          snap = await getDoc(ref);
+        }
+        const data = snap.data();
+        infoBox.innerHTML = `
+          👤 ${data.name}<br>
+          🆔 ${data.tg_id}<br>
+          <p>🪙 Available: ${data.available_shadow_coin}</p>
+          <p>🪙 Weekly: ${data.shadow_coin_weekly}</p>
+          <p>Refer: ${data.total_valid_refer}</p>
+          💵 $${data.usd_balance.toFixed(2)}
+        `;
+      });
     });
-  });
-</script>
-   <!-- Floating Buttons -->
-<div class="floating-btns">
-  <button onclick="location.href='leaderboard.html'">🏆 Leaderboard</button>
-  <button onclick="location.href='rewards.html'">🎁 Daily Rewards</button>
-  <button onclick="location.href='notifications.html'">💌 Notifications</button>
-</div>
-    <style>
-  /* Floating Button Styles */
-  .floating-btns {
-    position: fixed;
-    bottom: 20px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 2;
-    animation: floatIn 1s ease-out forwards;
-    transform: translateY(100px);
-    opacity: 0;
-  }
+  </script>
 
-  .floating-btns button {
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: 1px solid #5f27cd;
-    border-radius: 10px;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-  }
+  <!-- Background Music -->
+  <audio id="bgm" src="spiritual_shadow_bgm_trimmed.mp3" autoplay loop></audio>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const audio = document.getElementById("bgm");
+      setTimeout(() => {
+        audio.play().catch(err => console.warn("Autoplay blocked:", err));
+      }, 1000);
+    });
+  </script>
 
-  @keyframes floatIn {
-    to {
-      transform: translateY(0);
-      opacity: 1;
+  <!-- Styles -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
-  }
-</style>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-image: url('https://lh3.googleusercontent.com/d/1ISz_R6M4XNJZakvVYgD4ZfYzC6Ubz725');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
 
-  #playerInfo {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 12px;
-    padding: 15px;
-    font-size: 14px;
-    position: absolute;
-    top: 160px;
-    left: 20px;
-    max-width: 300px;
-    z-index: 1;
-    box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
-  }
+    #playerInfo {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 14px;
+      position: absolute;
+      top: 150px;
+      left: 20px;
+      max-width: 300px;
+      z-index: 1;
+      box-shadow: 0 0 10px rgba(95, 39, 205, 0.4);
+    }
 
-  .menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 350px;
-    width: 100%;
-    max-width: 300px;
-    z-index: 1;
-    position: relative;
-    align-items: center;
-  }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 360px;
+      width: 100%;
+      max-width: 300px;
+      z-index: 1;
+      position: relative;
+      align-items: center;
+    }
 
-  .menu button {
-    background: #5f27cd;
-    border: none;
-    padding: 18px;
-    border-radius: 12px;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    width: 100%;
-  }
+    .menu button {
+      background: #5f27cd;
+      border: none;
+      padding: 18px;
+      border-radius: 12px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      width: 100%;
+    }
 
-  .menu button.withdraw {
-    background: #7d3cff;
-    font-size: 20px;
-    font-weight: bold;
-  }
-</style>
+    .menu button.withdraw {
+      background: #7d3cff;
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-  </head>
-  <body>
-  <audio id="bgm" src="https://media.vocaroo.com/mp3/1epgRjrvWdWF" loop></audio>
+    /* Floating Buttons */
+    .floating-btns {
+      position: fixed;
+      bottom: 20px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+      animation: floatIn 1s ease-out forwards;
+      transform: translateY(100px);
+      opacity: 0;
+    }
 
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
-    const audio = document.getElementById("bgm");
-    setTimeout(() => {
-      audio.play().catch(err => console.log("Autoplay blocked:", err));
-    }, 1000); // 1 second delay helps
-  });
-</script>
-  <audio id="bgm" src="https://media.vocaroo.com/mp3/1epgRjrvWdWF" autoplay loop></audio>
-  
-    <div id="playerInfo">Loading player data...</div>
-    <div class="menu">
-      <button class="withdraw" onclick="location.href='withdraw.html'">💸 Withdraw</button>
-      <button onclick="showAdThenPlay()">▶ Play Now</button>
-      <button>🧙 Customize Shadow</button>
-      <button>🎮 Game Modes</button>
-    </div><audio id="bgm" src="https://media.vocaroo.com/mp3/1epgRjrvWdWF" loop></audio>
+    .floating-btns button {
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: 1px solid #5f27cd;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
-    const audio = document.getElementById("bgm");
-    setTimeout(() => {
-      audio.play().catch(err => console.log("Autoplay blocked:", err));
-    }, 1000); // 1 second delay helps
-  });
-</script>
-  </body>
+    @keyframes floatIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="playerInfo">Loading player data...</div>
+
+  <div class="menu">
+    <button class="withdraw" onclick="location.href='withdraw.html'">💸 Withdraw</button>
+    <button onclick="showAdThenPlay()">▶ Play Now</button>
+    <button onclick="location.href='customize.html'">🧙 Customize Shadow</button>
+    <button onclick="location.href='modes.html'">🎮 Game Modes</button>
+  </div>
+
+  <div class="floating-btns">
+    <button onclick="location.href='leaderboard.html'">🏆 Leaderboard</button>
+    <button onclick="location.href='rewards.html'">🎁 Daily Rewards</button>
+    <button onclick="location.href='notifications.html'">💌 Notifications</button>
+  </div>
+</body>
 </html>
