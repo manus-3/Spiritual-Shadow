@@ -81,16 +81,26 @@
   </script>
 
   <!-- Background Music -->
-  <audio id="bgm" src="https://drive.google.com/uc?export=download&id=1J5_Fi-i4vO_Ggo1WKJiMF5BBvn1dHP4V" autoplay loop></audio>
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const audio = document.getElementById("bgm");
-      setTimeout(() => {
-        audio.play().catch(err => console.warn("Autoplay blocked:", err));
-      }, 1000);
-    });
-  </script>
+  <audio id="bgm" src="https://drive.google.com/uc?export=download&id=1J5_Fi-i4vO_Ggo1WKJiMF5BBvn1dHP4V" loop></audio>
 
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const bgm = document.getElementById("bgm");
+
+    const tryPlay = () => {
+      bgm.play().then(() => {
+        console.log("BGM playing");
+      }).catch(err => {
+        console.log("Autoplay blocked, will wait for user interaction");
+        document.body.addEventListener("click", () => {
+          bgm.play();
+        }, { once: true });
+      });
+    };
+
+    tryPlay();
+  });
+</script>
   <!-- Styles -->
   <style>
     body {
