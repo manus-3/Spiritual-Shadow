@@ -185,7 +185,16 @@
 
   </head>
   <body>
-  
+  <audio id="bgm" src="https://media.vocaroo.com/mp3/1epgRjrvWdWF" loop></audio>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById("bgm");
+    setTimeout(() => {
+      audio.play().catch(err => console.log("Autoplay blocked:", err));
+    }, 1000); // 1 second delay helps
+  });
+</script>
   <audio id="bgm" src="https://media.vocaroo.com/mp3/1epgRjrvWdWF" autoplay loop></audio>
   
     <div id="playerInfo">Loading player data...</div>
