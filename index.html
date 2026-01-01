@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dino Runner</title>
+  <style>
+    body { margin:0; overflow:hidden; background:#fff; font-family:sans-serif; }
+    #game { position:relative; width:100vw; height:100vh; background:#eee; }
+    #dino {
+      position:absolute; bottom:0; left:50px;
+      width:50px; height:50px; background:#000; border-radius:6px;
+      transition:bottom 0.1s;
+    }
+    .cactus {
+      position:absolute; bottom:0; width:30px; height:50px; background:#333;
+      animation: move 2s linear infinite;
+    }
+    @keyframes move {
+      from { right:-50px; }
+      to { right:110%; }
+    }
+    #score {
+      position:absolute; top:10px; right:10px;
+      font-size:24px; color:#000;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="dino"></div>
+    <div id="score">0</div>
+  </div>
+
+<script>
+let dino = document.getElementById("dino");
+let game = document.getElementById("game");
+let scoreEl = document.getElementById("score");
+let jumping = false;
+let score = 0;
+
+// Jump mechanic
+document.addEventListener("keydown", jump);
+document.addEventListener("touchstart", jump);
+
+function jump() {
+  if (jumping) return;
+  jumping = true;
+  dino.style.bottom = "120px";
+  setTimeout(()=>{ dino.style.bottom = "0px"; jumping=false; }, 500);
+}
+
+// Spawn cactus
+function spawnCactus() {
+  let cactus = document.createElement("div");
+  cactus.classList.add("cactus");
+  game.appendChild(cactus);
+
+  let check = setInterval(()=>{
+    let dRect = dino.getBoundingClientRect();
+    let cRect = cactus.getBoundingClientRect();
+    if (
+      dRect.x < cRect.x + cRect.width &&
+      dRect.x + dRect.width > cRect.x &&
+      dRect.y < cRect.y + cRect.height &&
+      dRect.height + dRect.y > cRect.y
+    ) {
+      alert("Game Over — Score: " + score);
+      location.reload();
+    }
+  }, 10);
+
+  setTimeout(()=>{ cactus.remove(); clearInterval(check); }, 3000);
+}
+
+// Score loop + cactus loop
+setInterval(()=>{ score++; scoreEl.innerText = score; }, 200);
+setInterval(spawnCactus, 1500);
+</script>
+</body>
+</html>
